@@ -8,7 +8,7 @@ const customStyles = `
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -16,10 +16,44 @@ const customStyles = `
     }
   }
   
-  .animate-fadeInUp {
-    animation: fadeInUp 0.8s ease-out forwards;
-    opacity: 0;
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  .animate-slideInLeft {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+  
+  .animate-slideInRight {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+  
+  .animate-delay-100 { animation-delay: 0.1s; }
+  .animate-delay-200 { animation-delay: 0.2s; }
+  .animate-delay-300 { animation-delay: 0.3s; }
+  .animate-delay-400 { animation-delay: 0.4s; }
 `
 
 export default function Home() {
@@ -166,48 +200,48 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             {/* Title */}
             <div className="mb-6">
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 text-amber-900">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 text-amber-900 animate-fadeInUp">
                 Premium Coffee Experience
               </h1>
-              <p className="text-lg md:text-xl text-orange-700">Crafted with passion ✨</p>
+              <p className="text-lg md:text-xl text-orange-700 animate-fadeInUp animate-delay-100">Crafted with passion ✨</p>
             </div>
             
             {/* Description */}
-            <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto text-gray-700 leading-relaxed">
+            <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto text-gray-700 leading-relaxed animate-fadeInUp animate-delay-200">
               Discover our handcrafted beverages, artisanal pastries, and gourmet sandwiches.
             </p>
             
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto">
-              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3">
+            <div className="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto animate-slideInLeft animate-delay-300">
+              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3 hover:bg-white/40 transition-colors duration-200">
                 <div className="text-lg md:text-xl font-bold text-amber-800">{stats.users.toLocaleString()}</div>
                 <div className="text-xs md:text-sm text-gray-600">Customers</div>
               </div>
-              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3">
+              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3 hover:bg-white/40 transition-colors duration-200">
                 <div className="text-lg md:text-xl font-bold text-amber-800">{stats.orders.toLocaleString()}</div>
                 <div className="text-xs md:text-sm text-gray-600">Orders</div>
               </div>
-              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3">
+              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3 hover:bg-white/40 transition-colors duration-200">
                 <div className="text-lg md:text-xl font-bold text-amber-800">{stats.products}</div>
                 <div className="text-xs md:text-sm text-gray-600">Items</div>
               </div>
             </div>
             
             {/* Product Icons */}
-            <div className="flex justify-center items-center space-x-4 md:space-x-8 mb-8">
-              <div className="text-center">
+            <div className="flex justify-center items-center space-x-4 md:space-x-8 mb-8 animate-slideInRight animate-delay-300">
+              <div className="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                 <div className="text-2xl md:text-3xl mb-1">☕</div>
                 <p className="text-xs md:text-sm font-medium">Coffee</p>
               </div>
-              <div className="text-center">
+              <div className="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                 <div className="text-2xl md:text-3xl mb-1">🍵</div>
                 <p className="text-xs md:text-sm font-medium">Tea</p>
               </div>
-              <div className="text-center">
+              <div className="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                 <div className="text-2xl md:text-3xl mb-1">🥐</div>
                 <p className="text-xs md:text-sm font-medium">Pastries</p>
               </div>
-              <div className="text-center">
+              <div className="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                 <div className="text-2xl md:text-3xl mb-1">🥪</div>
                 <p className="text-xs md:text-sm font-medium">Sandwiches</p>
               </div>
@@ -215,16 +249,16 @@ export default function Home() {
             
             {/* Action Buttons */}
             {!user && (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto animate-fadeInUp animate-delay-400">
                 <Link 
                   href="/register" 
-                  className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors duration-200"
+                  className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 hover:scale-105 transition-all duration-200 transform"
                 >
                   Start Ordering
                 </Link>
                 <Link 
                   href="#menu" 
-                  className="border-2 border-amber-600 text-amber-600 px-6 py-3 rounded-lg font-semibold hover:bg-amber-600 hover:text-white transition-colors duration-200"
+                  className="border-2 border-amber-600 text-amber-600 px-6 py-3 rounded-lg font-semibold hover:bg-amber-600 hover:text-white hover:scale-105 transition-all duration-200 transform"
                 >
                   View Menu
                 </Link>
@@ -232,10 +266,10 @@ export default function Home() {
             )}
             
             {user && (
-              <div>
+              <div className="animate-fadeInUp animate-delay-400">
                 <Link 
                   href={user.role === 'admin' ? '/admin' : '/dashboard'}
-                  className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors duration-200"
+                  className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 hover:scale-105 transition-all duration-200 transform"
                 >
                   Go to Dashboard
                 </Link>
@@ -343,8 +377,12 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products.map((product) => (
-                <div key={product._id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+              {products.map((product, index) => (
+                <div 
+                  key={product._id} 
+                  className="bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fadeInUp"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex flex-col gap-1">
@@ -358,7 +396,7 @@ export default function Home() {
                         </span>
                         <div className="flex gap-1">
                           {product.isTrending && (
-                            <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">
+                            <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium animate-pulse">
                               🔥 TRENDING
                             </span>
                           )}
@@ -387,7 +425,7 @@ export default function Home() {
                             {product.totalSold} sold
                           </span>
                         )}
-                        <span className={`w-2 h-2 rounded-full ${
+                        <span className={`w-2 h-2 rounded-full animate-pulse ${
                           (product.stock || 0) > 10 ? 'bg-green-400' :
                           (product.stock || 0) > 0 ? 'bg-yellow-400' : 'bg-red-400'
                         }`}></span>
@@ -395,14 +433,14 @@ export default function Home() {
                       {user && user.role === 'customer' ? (
                         <Link 
                           href="/dashboard"
-                          className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors"
+                          className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-600 hover:scale-105 transition-all duration-200 transform"
                         >
                           Order Now
                         </Link>
                       ) : !user ? (
                         <Link 
                           href="/register"
-                          className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 hover:scale-105 transition-all duration-200 transform"
                         >
                           Join to Order
                         </Link>
@@ -434,40 +472,40 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 animate-fadeInUp">
             <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">Why Choose Us</h2>
             <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
               Everything you need for the perfect coffee experience
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-3">🔐</div>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 animate-slideInLeft animate-delay-100">
+              <div className="text-3xl mb-3 hover:scale-110 transition-transform duration-200">🔐</div>
               <h3 className="text-lg font-semibold mb-2 text-gray-800">Secure Login</h3>
               <p className="text-gray-600 text-sm">Safe and secure authentication for all users</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-3">🛒</div>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 animate-fadeInUp animate-delay-200">
+              <div className="text-3xl mb-3 hover:scale-110 transition-transform duration-200">🛒</div>
               <h3 className="text-lg font-semibold mb-2 text-gray-800">Easy Ordering</h3>
               <p className="text-gray-600 text-sm">Simple cart system with real-time calculations</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-3">📦</div>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 animate-slideInRight animate-delay-100">
+              <div className="text-3xl mb-3 hover:scale-110 transition-transform duration-200">📦</div>
               <h3 className="text-lg font-semibold mb-2 text-gray-800">Fresh Stock</h3>
               <p className="text-gray-600 text-sm">Real-time inventory with fresh products daily</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-3">🔥</div>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 animate-slideInLeft animate-delay-300">
+              <div className="text-3xl mb-3 hover:scale-110 transition-transform duration-200">🔥</div>
               <h3 className="text-lg font-semibold mb-2 text-gray-800">Trending Items</h3>
               <p className="text-gray-600 text-sm">Discover what's popular with other customers</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-3">⭐</div>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 animate-fadeInUp animate-delay-400">
+              <div className="text-3xl mb-3 hover:scale-110 transition-transform duration-200">⭐</div>
               <h3 className="text-lg font-semibold mb-2 text-gray-800">Premium Selection</h3>
               <p className="text-gray-600 text-sm">Curated featured products for the best experience</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-3">📱</div>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 animate-slideInRight animate-delay-300">
+              <div className="text-3xl mb-3 hover:scale-110 transition-transform duration-200">📱</div>
               <h3 className="text-lg font-semibold mb-2 text-gray-800">Mobile Friendly</h3>
               <p className="text-gray-600 text-sm">Perfect experience on all devices and screens</p>
             </div>
