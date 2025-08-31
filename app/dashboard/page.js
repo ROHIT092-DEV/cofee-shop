@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import Loading from '@/components/Loading'
 
 // Toast Component
 const Toast = ({ message, type, onClose }) => {
@@ -34,6 +35,10 @@ export default function CustomerDashboard() {
   const [toast, setToast] = useState(null)
   const [reviewRating, setReviewRating] = useState(0)
   const [reviewComment, setReviewComment] = useState('')
+  const [loading, setLoading] = useState({
+    products: false,
+    orders: false
+  })
 
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
@@ -62,6 +67,7 @@ export default function CustomerDashboard() {
 
   const fetchProducts = async () => {
     try {
+      setLoading(prev => ({ ...prev, products: true }))
       const params = new URLSearchParams()
       if (searchTerm) params.append('search', searchTerm)
       if (filterCategory) params.append('category', filterCategory)
@@ -69,14 +75,18 @@ export default function CustomerDashboard() {
       
       const res = await fetch(`/api/products?${params}`)
       const data = await res.json()
-      setProducts(data)
+      setProducts(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching products:', error)
+      setProducts([])
+    } finally {
+      setLoading(prev => ({ ...prev, products: false }))
     }
   }
 
   const fetchOrders = async () => {
     try {
+      setLoading(prev => ({ ...prev, orders: true }))
       const token = localStorage.getItem('token')
       const res = await fetch('/api/orders', {
         headers: {
@@ -84,9 +94,12 @@ export default function CustomerDashboard() {
         },
       })
       const data = await res.json()
-      setOrders(data)
+      setOrders(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching orders:', error)
+      setOrders([])
+    } finally {
+      setLoading(prev => ({ ...prev, orders: false }))
     }
   }
 
@@ -273,11 +286,14 @@ export default function CustomerDashboard() {
                   <option value="sandwich">🥪 Sandwich</option>
                 </select>
               </div>
-              <div className="grid grid-cols-1 gap-4">
-                {products.map((product) => (
-                  <div key={product._id} className={`bg-white rounded-lg shadow-md p-4 sm:p-6 ${
-                    (product.stock || 0) === 0 ? 'opacity-50' : ''
-                  }`}>
+              {loading.products ? (
+                <Loading message="Loading menu..." />
+              ) : (
+                <div className="grid grid-cols-1 gap-4">
+                  {products.map((product) => (
+                    <div key={product._id} className={`bg-white rounded-lg shadow-md p-4 sm:p-6 ${
+                      (product.stock || 0) === 0 ? 'opacity-50' : ''
+                    }`}>
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-lg sm:text-xl font-semibold">{product.name}</h3>
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
@@ -303,9 +319,10 @@ export default function CustomerDashboard() {
                         {(product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </button>
                     </div>
-                  </div>
-                ))}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-4 sticky top-20 z-30">
@@ -365,7 +382,9 @@ export default function CustomerDashboard() {
         {activeTab === 'orders' && (
           <div>
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">My Orders</h2>
-            {orders.length === 0 ? (
+            {loading.orders ? (
+              <Loading message="Loading orders..." />
+            ) : orders.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <p className="text-gray-500">No orders yet</p>
               </div>

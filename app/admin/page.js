@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import Loading from '@/components/Loading';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -24,6 +25,14 @@ export default function AdminDashboard() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
   const [toast, setToast] = useState(null);
+  const [loading, setLoading] = useState({
+    products: false,
+    orders: false,
+    users: false,
+    reviews: false,
+    analytics: false
+  });
+  const [analytics, setAnalytics] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -43,6 +52,7 @@ export default function AdminDashboard() {
     fetchOrders();
     fetchUsers();
     fetchReviews();
+    fetchAnalytics();
   }, []);
 
   useEffect(() => {
@@ -58,6 +68,7 @@ export default function AdminDashboard() {
 
   const fetchProducts = async () => {
     try {
+      setLoading(prev => ({ ...prev, products: true }));
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (filterCategory) params.append('category', filterCategory);
@@ -65,14 +76,18 @@ export default function AdminDashboard() {
       
       const res = await fetch(`/api/products?${params}`);
       const data = await res.json();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]);
+    } finally {
+      setLoading(prev => ({ ...prev, products: false }));
     }
   };
 
   const fetchOrders = async () => {
     try {
+      setLoading(prev => ({ ...prev, orders: true }));
       const token = localStorage.getItem('token');
       const res = await fetch('/api/orders', {
         headers: {
@@ -84,11 +99,14 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders([]);
+    } finally {
+      setLoading(prev => ({ ...prev, orders: false }));
     }
   };
 
   const fetchUsers = async () => {
     try {
+      setLoading(prev => ({ ...prev, users: true }));
       const token = localStorage.getItem('token');
       const res = await fetch('/api/users', {
         headers: {
@@ -100,6 +118,8 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error fetching users:', error);
       setUsers([]);
+    } finally {
+      setLoading(prev => ({ ...prev, users: false }));
     }
   };
 
@@ -141,6 +161,7 @@ export default function AdminDashboard() {
 
   const fetchReviews = async () => {
     try {
+      setLoading(prev => ({ ...prev, reviews: true }));
       const token = localStorage.getItem('token');
       const res = await fetch('/api/admin/reviews', {
         headers: {
@@ -152,6 +173,27 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error fetching reviews:', error);
       setReviews([]);
+    } finally {
+      setLoading(prev => ({ ...prev, reviews: false }));
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      setLoading(prev => ({ ...prev, analytics: true }));
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/analytics', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setAnalytics(data);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      setAnalytics(null);
+    } finally {
+      setLoading(prev => ({ ...prev, analytics: false }));
     }
   };
 
@@ -373,10 +415,10 @@ export default function AdminDashboard() {
             <div className="text-center text-red-100 font-medium">
               Admin Panel
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setActiveTab('products')}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'products' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
@@ -384,27 +426,35 @@ export default function AdminDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab('orders')}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'orders' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
-                📋 Orders ({(orders || []).filter((o) => o.status !== 'completed').length})
+                📋 Orders
+              </button>
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                  activeTab === 'analytics' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
+                }`}
+              >
+                📊 Analytics
               </button>
               <button
                 onClick={() => setActiveTab('users')}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'users' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
-                👥 Users ({(users || []).length})
+                👥 Users
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'reviews' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
-                ⭐ Reviews ({(reviews || []).filter(r => !r.isApproved).length})
+                ⭐ Reviews
               </button>
             </div>
           </div>
@@ -554,14 +604,17 @@ export default function AdminDashboard() {
                   <option value="sandwich">🥪 Sandwich</option>
                 </select>
               </div>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {products.map((product) => (
-                  <div
-                    key={product._id}
-                    className={`border rounded-lg p-3 sm:p-4 ${
-                      (product.stock || 0) <= (product.lowStockThreshold || 10) ? 'border-red-300 bg-red-50' : ''
-                    }`}
-                  >
+              {loading.products ? (
+                <Loading message="Loading products..." />
+              ) : (
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {products.map((product) => (
+                    <div
+                      key={product._id}
+                      className={`border rounded-lg p-3 sm:p-4 ${
+                        (product.stock || 0) <= (product.lowStockThreshold || 10) ? 'border-red-300 bg-red-50' : ''
+                      }`}
+                    >
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="font-semibold text-base">{product.name}</h3>
@@ -621,9 +674,89 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'analytics' && (
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+              📊 Analytics & Profit/Loss
+            </h2>
+            
+            {loading.analytics ? (
+              <Loading message="Loading analytics..." />
+            ) : analytics ? (
+              <div className="space-y-6">
+                {/* Revenue Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-green-600">
+                      ₹{analytics.totalRevenue.toFixed(2)}
+                    </div>
+                    <div className="text-sm text-green-700">Total Revenue</div>
+                    <div className="text-xs text-gray-500">{analytics.completedOrdersCount} completed orders</div>
+                  </div>
+                  
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-blue-600">
+                      ₹{analytics.pendingRevenue.toFixed(2)}
+                    </div>
+                    <div className="text-sm text-blue-700">Pending Revenue</div>
+                    <div className="text-xs text-gray-500">{analytics.activeOrdersCount} active orders</div>
+                  </div>
+                  
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-amber-600">
+                      ₹{analytics.estimatedProfit.toFixed(2)}
+                    </div>
+                    <div className="text-sm text-amber-700">Estimated Profit</div>
+                    <div className="text-xs text-gray-500">30% margin estimate</div>
+                  </div>
+                </div>
+
+                {/* Daily Sales */}
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <h3 className="text-lg font-bold mb-4">📈 Recent Sales</h3>
+                  <div className="space-y-2">
+                    {analytics.dailySales.map(day => (
+                      <div key={day.date} className="flex justify-between items-center p-2 border-b">
+                        <span className="text-sm">{day.date}</span>
+                        <div className="text-right">
+                          <div className="font-medium">₹{day.revenue.toFixed(2)}</div>
+                          <div className="text-xs text-gray-500">{day.orders} orders</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Top Products */}
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <h3 className="text-lg font-bold mb-4">🏆 Top Selling Products</h3>
+                  <div className="space-y-2">
+                    {analytics.topProducts.map(product => (
+                      <div key={product.name} className="flex justify-between items-center p-2 border-b">
+                        <span className="text-sm font-medium">{product.name}</span>
+                        <div className="text-right">
+                          <div className="font-medium text-green-600">₹{product.revenue.toFixed(2)}</div>
+                          <div className="text-xs text-gray-500">{product.quantity} sold</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <div className="text-6xl mb-4">📊</div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">No Analytics Data</h3>
+                <p className="text-gray-600">Analytics will appear when you have orders.</p>
+              </div>
+            )}
           </div>
         )}
 
@@ -743,7 +876,9 @@ export default function AdminDashboard() {
               </div>
             )}
             
-            {(orders || []).length === 0 ? (
+            {loading.orders ? (
+              <Loading message="Loading orders..." />
+            ) : (orders || []).length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <p className="text-gray-500">No orders yet</p>
               </div>
@@ -896,9 +1031,12 @@ export default function AdminDashboard() {
               User Management
             </h2>
             
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <div className="space-y-4">
-                {(users || []).map((userData) => (
+            {loading.users ? (
+              <Loading message="Loading users..." />
+            ) : (
+              <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+                <div className="space-y-4">
+                  {(users || []).map((userData) => (
                   <div key={userData._id} className="border rounded-lg p-4 flex justify-between items-center">
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg">{userData.name}</h3>
@@ -940,9 +1078,10 @@ export default function AdminDashboard() {
                       )}
                     </div>
                   </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -952,11 +1091,14 @@ export default function AdminDashboard() {
               Review Management
             </h2>
             
-            <div className="space-y-6">
-              {/* Pending Reviews */}
-              {(reviews || []).filter(r => !r.isApproved).length > 0 && (
-                <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-                  <h3 className="text-lg font-bold mb-4 text-orange-600">⏳ Pending Approval ({(reviews || []).filter(r => !r.isApproved).length})</h3>
+            {loading.reviews ? (
+              <Loading message="Loading reviews..." />
+            ) : (
+              <div className="space-y-6">
+                {/* Pending Reviews */}
+                {(reviews || []).filter(r => !r.isApproved).length > 0 && (
+                  <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+                    <h3 className="text-lg font-bold mb-4 text-orange-600">⏳ Pending Approval ({(reviews || []).filter(r => !r.isApproved).length})</h3>
                   <div className="space-y-4">
                     {(reviews || []).filter(r => !r.isApproved).map((review) => (
                       <div key={review._id} className="border border-orange-200 rounded-lg p-4 bg-orange-50">
@@ -1035,14 +1177,15 @@ export default function AdminDashboard() {
                 </div>
               )}
               
-              {(reviews || []).length === 0 && (
-                <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                  <div className="text-6xl mb-4">⭐</div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">No Reviews Yet</h3>
-                  <p className="text-gray-600">Customer reviews will appear here for approval.</p>
-                </div>
-              )}
-            </div>
+                {(reviews || []).length === 0 && (
+                  <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                    <div className="text-6xl mb-4">⭐</div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">No Reviews Yet</h3>
+                    <p className="text-gray-600">Customer reviews will appear here for approval.</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
