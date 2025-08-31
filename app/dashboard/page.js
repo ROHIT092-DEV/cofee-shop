@@ -67,6 +67,13 @@ export default function CustomerDashboard() {
 
   const addToCart = (product) => {
     const existingItem = cart.find(item => item._id === product._id)
+    const currentQuantityInCart = existingItem ? existingItem.quantity : 0
+    
+    if (currentQuantityInCart >= (product.stock || 0)) {
+      alert(`Sorry, only ${product.stock} items available in stock!`)
+      return
+    }
+    
     if (existingItem) {
       setCart(cart.map(item => 
         item._id === product._id 
@@ -86,6 +93,12 @@ export default function CustomerDashboard() {
     if (newQuantity === 0) {
       removeFromCart(productId)
     } else {
+      const product = products.find(p => p._id === productId)
+      if (newQuantity > (product?.stock || 0)) {
+        alert(`Sorry, only ${product?.stock} items available in stock!`)
+        return
+      }
+      
       setCart(cart.map(item => 
         item._id === productId 
           ? { ...item, quantity: newQuantity }
@@ -123,6 +136,7 @@ export default function CustomerDashboard() {
         setCart([])
         setShowPayment(false)
         fetchOrders()
+        fetchProducts() // Refresh products to show updated stock
         alert('Order placed successfully!')
       }
     } catch (error) {

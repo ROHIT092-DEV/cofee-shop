@@ -25,6 +25,7 @@ const customStyles = `
 export default function Home() {
   const [products, setProducts] = useState([])
   const [trendingProducts, setTrendingProducts] = useState([])
+  const [featuredProducts, setFeaturedProducts] = useState([])
   const [user, setUser] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
@@ -40,6 +41,7 @@ export default function Home() {
     }
     fetchProducts()
     fetchTrendingProducts()
+    fetchFeaturedProducts()
   }, [])
 
   useEffect(() => {
@@ -91,6 +93,16 @@ export default function Home() {
     }
   }
 
+  const fetchFeaturedProducts = async () => {
+    try {
+      const res = await fetch('/api/products/featured')
+      const data = await res.json()
+      setFeaturedProducts(data)
+    } catch (error) {
+      console.error('Error fetching featured products:', error)
+    }
+  }
+
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -111,7 +123,7 @@ export default function Home() {
         <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-900 via-orange-800 to-red-900 text-white min-h-screen flex items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-100 via-orange-200 to-yellow-300 text-gray-800 min-h-screen flex items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}>
@@ -164,25 +176,25 @@ export default function Home() {
         </div>
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20"></div>
         
         {/* Main Content */}
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-5xl mx-auto">
             {/* Animated Title */}
             <div className="mb-8">
-              <h2 className="text-5xl lg:text-8xl font-bold mb-4 leading-tight">
+              <h2 className="text-5xl lg:text-8xl font-bold mb-4 leading-tight text-amber-900">
                 <span className="inline-block animate-fadeInUp" style={{animationDelay: '0.2s'}}>Premium</span>
                 <span className="inline-block animate-fadeInUp ml-4" style={{animationDelay: '0.4s'}}>Coffee</span>
               </h2>
-              <div className="text-3xl lg:text-6xl text-amber-200 font-light">
+              <div className="text-3xl lg:text-6xl text-orange-700 font-light">
                 <span className="inline-block animate-fadeInUp" style={{animationDelay: '0.6s'}}>Experience</span>
                 <span className="inline-block animate-fadeInUp ml-4" style={{animationDelay: '0.8s'}}>✨</span>
               </div>
             </div>
             
             {/* Animated Description */}
-            <p className="text-lg lg:text-2xl mb-12 max-w-4xl mx-auto opacity-90 leading-relaxed animate-fadeInUp" style={{animationDelay: '1s'}}>
+            <p className="text-lg lg:text-2xl mb-12 max-w-4xl mx-auto text-gray-700 leading-relaxed animate-fadeInUp" style={{animationDelay: '1s'}}>
               Discover our handcrafted beverages, artisanal pastries, and gourmet sandwiches. 
               Every cup tells a story of passion and perfection.
             </p>
@@ -212,7 +224,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fadeInUp" style={{animationDelay: '1.4s'}}>
                 <Link 
                   href="/register" 
-                  className="group bg-white text-amber-600 px-10 py-4 rounded-full font-bold hover:bg-amber-50 transition-all duration-500 text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105"
+                  className="group bg-amber-600 text-white px-10 py-4 rounded-full font-bold hover:bg-amber-700 transition-all duration-500 text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105"
                 >
                   <span className="flex items-center justify-center">
                     Start Your Journey
@@ -221,7 +233,7 @@ export default function Home() {
                 </Link>
                 <Link 
                   href="#menu" 
-                  className="group border-2 border-white text-white px-10 py-4 rounded-full font-bold hover:bg-white hover:text-amber-600 transition-all duration-500 text-lg transform hover:-translate-y-2 hover:scale-105"
+                  className="group border-2 border-amber-600 text-amber-600 px-10 py-4 rounded-full font-bold hover:bg-amber-600 hover:text-white transition-all duration-500 text-lg transform hover:-translate-y-2 hover:scale-105"
                 >
                   <span className="flex items-center justify-center">
                     Explore Menu
@@ -235,7 +247,7 @@ export default function Home() {
               <div className="animate-fadeInUp" style={{animationDelay: '1.4s'}}>
                 <Link 
                   href={user.role === 'admin' ? '/admin' : '/dashboard'}
-                  className="group bg-white text-amber-600 px-10 py-4 rounded-full font-bold hover:bg-amber-50 transition-all duration-500 text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105"
+                  className="group bg-amber-600 text-white px-10 py-4 rounded-full font-bold hover:bg-amber-700 transition-all duration-500 text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105"
                 >
                   <span className="flex items-center justify-center">
                     Go to Dashboard
@@ -249,57 +261,16 @@ export default function Home() {
         
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
+          <div className="w-6 h-10 border-2 border-amber-600/50 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-amber-600/50 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
         
         {/* Bottom Gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
       </section>
 
-      {/* Trending Products */}
-      {trendingProducts.length > 0 && (
-        <section className="py-16 lg:py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">🔥 Trending Now</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Our most popular items loved by customers worldwide
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-              {trendingProducts.map((product) => (
-                <div key={product._id} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">TRENDING</span>
-                      <span className="text-2xl font-bold text-amber-600">${product.price}</span>
-                    </div>
-                    <h3 className="font-bold text-lg mb-2 group-hover:text-amber-600 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-500">{product.totalSold || 0} sold</span>
-                      {user && user.role === 'customer' && (
-                        <Link 
-                          href="/dashboard"
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300"
-                        >
-                          Order
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Search & Filter Section */}
+      {/* Product List with Search & Filter */}
       <section id="menu" className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -415,6 +386,11 @@ export default function Home() {
                             🔥 TRENDING
                           </span>
                         )}
+                        {product.isFeatured && (
+                          <span className="bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-xs font-bold w-fit mt-1">
+                            ⭐ FEATURED
+                          </span>
+                        )}
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-amber-600">${product.price}</div>
@@ -478,6 +454,269 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Features Section */}
+      <section className="py-16 lg:py-20 bg-gradient-to-r from-slate-50 to-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">🚀 Platform Features</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Everything you need for the perfect coffee ordering experience
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">🔐</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Role-Based Authentication</h3>
+              <p className="text-gray-600">Secure login system with Customer and Admin roles, JWT token protection</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">🛒</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Smart Cart System</h3>
+              <p className="text-gray-600">Add items to cart, manage quantities, real-time total calculation</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">📦</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Inventory Management</h3>
+              <p className="text-gray-600">Real-time stock tracking, automatic updates, low stock alerts</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">🔥</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Trending Algorithm</h3>
+              <p className="text-gray-600">Products become trending with 5+ sales or admin marking, dynamic ranking</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">⭐</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Featured Products</h3>
+              <p className="text-gray-600">Admin-curated premium selections with special highlighting</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">🔍</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Advanced Search & Filter</h3>
+              <p className="text-gray-600">Search by name, filter by category, price range, and popularity</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">📱</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Responsive Design</h3>
+              <p className="text-gray-600">Mobile-first design, works perfectly on all devices and screen sizes</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">📊</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Order Management</h3>
+              <p className="text-gray-600">Complete order tracking, status updates, order history for users</p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="text-4xl mb-4">🎨</div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Beautiful Animations</h3>
+              <p className="text-gray-600">Smooth transitions, hover effects, and engaging user interactions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      {featuredProducts.length > 0 && (
+        <section className="py-16 lg:py-20 bg-gradient-to-r from-purple-50 to-pink-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">⭐ Featured Products</h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Handpicked selections from our premium collection
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product) => (
+                <div key={product._id} className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-3 border border-purple-100">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">FEATURED</span>
+                      <span className="text-2xl font-bold text-purple-600">${product.price}</span>
+                    </div>
+                    <h3 className="font-bold text-xl mb-3 group-hover:text-purple-600 transition-colors leading-tight">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">{product.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                        {product.stock} in stock
+                      </span>
+                      {user && user.role === 'customer' && (
+                        <Link 
+                          href="/dashboard"
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        >
+                          Order Now
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Trending of the Day - Special Highlight */}
+      {trendingProducts.length > 0 && (
+        <section className="relative py-20 lg:py-32 bg-gradient-to-br from-red-600 via-orange-600 to-yellow-500 overflow-hidden">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0">
+            <div className="absolute top-10 left-10 animate-pulse">
+              <div className="text-8xl opacity-20">🔥</div>
+            </div>
+            <div className="absolute top-20 right-20 animate-bounce" style={{animationDelay: '1s'}}>
+              <div className="text-6xl opacity-30">⭐</div>
+            </div>
+            <div className="absolute bottom-20 left-1/4 animate-pulse" style={{animationDelay: '2s'}}>
+              <div className="text-7xl opacity-25">🔥</div>
+            </div>
+            <div className="absolute top-1/2 right-1/3 animate-bounce" style={{animationDelay: '0.5s'}}>
+              <div className="text-5xl opacity-20">⚡</div>
+            </div>
+          </div>
+          
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-black/20"></div>
+          
+          <div className="container mx-auto px-4 relative z-10">
+            {/* Animated Header */}
+            <div className="text-center mb-16">
+              <div className="inline-block animate-bounce mb-4">
+                <span className="text-6xl lg:text-8xl">🔥</span>
+              </div>
+              <h2 className="text-4xl lg:text-7xl font-black mb-6 text-white leading-tight">
+                <span className="animate-pulse">TRENDING</span>
+                <span className="block text-3xl lg:text-5xl text-yellow-200 font-light mt-2">
+                  of the Day
+                </span>
+              </h2>
+              <p className="text-xl lg:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-6">
+                🎆 Today's hottest picks that everyone's talking about!
+              </p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 max-w-4xl mx-auto mb-6">
+                <h3 className="text-2xl font-bold text-white mb-4">🏆 Trending Levels Explained</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-3xl mb-2">🔥</div>
+                    <div className="text-yellow-300 font-bold">Level 1: Hot</div>
+                    <div className="text-white/80 text-sm">5+ sales today</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-3xl mb-2">🔥🔥</div>
+                    <div className="text-orange-300 font-bold">Level 2: Viral</div>
+                    <div className="text-white/80 text-sm">15+ sales today</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-3xl mb-2">🔥🔥🔥</div>
+                    <div className="text-red-300 font-bold">Level 3: Legendary</div>
+                    <div className="text-white/80 text-sm">25+ sales today</div>
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+                <span className="text-white font-bold text-lg">
+                  📈 {trendingProducts.reduce((sum, p) => sum + (p.totalSold || 0), 0)} total sales today!
+                </span>
+              </div>
+            </div>
+            
+            {/* Featured Trending Product - Hero Style */}
+            {trendingProducts[0] && (
+              <div className="mb-16">
+                <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg rounded-3xl p-8 lg:p-12 border border-white/20 shadow-2xl">
+                  <div className="text-center">
+                    <div className="inline-block bg-gradient-to-r from-yellow-400 to-red-500 text-black px-6 py-3 rounded-full font-black text-lg mb-6 animate-pulse">
+                      🏆 #1 TRENDING TODAY
+                    </div>
+                    <h3 className="text-3xl lg:text-5xl font-bold text-white mb-4">
+                      {trendingProducts[0].name}
+                    </h3>
+                    <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+                      {trendingProducts[0].description}
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-8">
+                      <div className="text-center">
+                        <div className="text-5xl lg:text-7xl font-black text-yellow-300">
+                          ${trendingProducts[0].price}
+                        </div>
+                        <div className="text-white/70 text-sm">Special Price</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl lg:text-5xl font-bold text-white">
+                          {trendingProducts[0].totalSold || 0}
+                        </div>
+                        <div className="text-white/70 text-sm">Sold Today</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl lg:text-5xl font-bold text-green-300">
+                          {trendingProducts[0].stock}
+                        </div>
+                        <div className="text-white/70 text-sm">Left in Stock</div>
+                      </div>
+                    </div>
+                    {user && user.role === 'customer' ? (
+                      <Link 
+                        href="/dashboard"
+                        className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-12 py-4 rounded-full font-black text-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+                      >
+                        🚀 ORDER NOW - LIMITED TIME!
+                      </Link>
+                    ) : (
+                      <Link 
+                        href="/register"
+                        className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-12 py-4 rounded-full font-black text-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+                      >
+                        🎆 JOIN TO ORDER!
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Other Trending Items */}
+            {trendingProducts.length > 1 && (
+              <div>
+                <h3 className="text-2xl lg:text-3xl font-bold text-white text-center mb-8">
+                  🔥 More Hot Picks
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                  {trendingProducts.slice(1).map((product, index) => (
+                    <div key={product._id} className="group bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
+                      <div className="text-center">
+                        <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold mb-3 inline-block">
+                          #{index + 2} {(product.totalSold || 0) >= 25 ? '🔥🔥🔥 LEGENDARY' : (product.totalSold || 0) >= 15 ? '🔥🔥 VIRAL' : '🔥 HOT'}
+                        </div>
+                        <h4 className="font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">
+                          {product.name}
+                        </h4>
+                        <div className="text-2xl font-bold text-yellow-300 mb-2">
+                          ${product.price}
+                        </div>
+                        <div className="text-white/70 text-sm mb-4">
+                          {product.totalSold || 0} sold
+                        </div>
+                        {user && user.role === 'customer' && (
+                          <Link 
+                            href="/dashboard"
+                            className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-lg text-sm font-bold hover:shadow-lg transition-all duration-300 inline-block"
+                          >
+                            Order
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Bottom Gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent"></div>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="bg-gradient-to-r from-gray-900 to-black text-white py-16">

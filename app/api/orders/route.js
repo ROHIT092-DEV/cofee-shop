@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import connectDB from '@/lib/mongodb'
 import Order from '@/models/Order'
 import User from '@/models/User'
+import Product from '@/models/Product'
 
 export async function POST(request) {
   try {
@@ -20,6 +21,31 @@ export async function POST(request) {
     
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    // Check stock availability and update inventory
+    for (const item of items) {
+      const product = await Product.findById(item.product)
+      if (!product) {
+        return NextResponse.json({ error: `Product not found: ${item.product}` }, { status: 404 })
+      }
+      
+      if (product.stock < item.quantity) {
+        return NextResponse.json({ 
+          error: `Insufficient stock for ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}` 
+        }, { status: 400 })
+      }
+      
+      // Update stock and sales count
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: {
+          stock: -item.quantity,
+          totalSold: item.quantity
+        },
+        $set: {
+          inStock: product.stock - item.quantity > 0
+        }
+      })
     }
 
     const order = new Order({
