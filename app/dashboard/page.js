@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Navbar from '@/components/Navbar'
 
 export default function CustomerDashboard() {
   const [user, setUser] = useState(null)
@@ -9,6 +10,8 @@ export default function CustomerDashboard() {
   const [orders, setOrders] = useState([])
   const [activeTab, setActiveTab] = useState('menu')
   const [showPayment, setShowPayment] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterCategory, setFilterCategory] = useState('')
   const router = useRouter()
 
   useEffect(() => {
@@ -28,9 +31,18 @@ export default function CustomerDashboard() {
     fetchOrders()
   }, [])
 
+  useEffect(() => {
+    fetchProducts()
+  }, [searchTerm, filterCategory])
+
   const fetchProducts = async () => {
     try {
-      const res = await fetch('/api/products')
+      const params = new URLSearchParams()
+      if (searchTerm) params.append('search', searchTerm)
+      if (filterCategory) params.append('category', filterCategory)
+      params.append('inStock', 'true')
+      
+      const res = await fetch(`/api/products?${params}`)
       const data = await res.json()
       setProducts(data)
     } catch (error) {
@@ -119,61 +131,92 @@ export default function CustomerDashboard() {
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    router.push('/')
-  }
+
 
   if (!user) return <div className="flex items-center justify-center min-h-screen"><div className="text-lg">Loading...</div></div>
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-amber-800 text-white p-4">
+      <Navbar />
+      
+      {/* Customer Tabs */}
+      <div className="bg-amber-800 text-white p-4">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-4 sm:mb-0">
-            <h1 className="text-xl sm:text-2xl font-bold">Customer</h1>
-            <button onClick={logout} className="bg-red-600 px-3 py-1 sm:px-4 sm:py-2 rounded text-sm sm:text-base">
-              Logout
-            </button>
-          </div>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
             <div className="flex space-x-2 mb-2 sm:mb-0">
               <button 
                 onClick={() => setActiveTab('menu')} 
-                className={`flex-1 sm:flex-none px-3 py-2 rounded text-sm sm:text-base ${activeTab === 'menu' ? 'bg-amber-600' : 'bg-amber-700'}`}
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'menu' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
               >
-                Menu
+                🍽️ Menu
               </button>
               <button 
                 onClick={() => setActiveTab('orders')} 
-                className={`flex-1 sm:flex-none px-3 py-2 rounded text-sm sm:text-base ${activeTab === 'orders' ? 'bg-amber-600' : 'bg-amber-700'}`}
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'orders' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
               >
-                My Orders
+                📋 My Orders
               </button>
             </div>
-            <span className="text-sm sm:text-base">Welcome, {user.name}</span>
+            <div className="text-sm sm:text-base text-amber-100">
+              Customer Dashboard
+            </div>
           </div>
         </div>
-      </nav>
+      </div>
 
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
         {activeTab === 'menu' && (
           <div className="space-y-6 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
             <div className="lg:col-span-2">
               <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Menu</h2>
+              <div className="mb-4 space-y-2">
+                <input
+                  type="text"
+                  placeholder="Search menu items..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                />
+                <select
+                  value={filterCategory}
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                >
+                  <option value="">All Categories</option>
+                  <option value="coffee">Coffee</option>
+                  <option value="tea">Tea</option>
+                  <option value="pastry">Pastry</option>
+                  <option value="sandwich">Sandwich</option>
+                </select>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {products.map((product) => (
-                  <div key={product._id} className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-                    <h3 className="text-lg sm:text-xl font-semibold mb-2">{product.name}</h3>
+                  <div key={product._id} className={`bg-white rounded-lg shadow-md p-4 sm:p-6 ${
+                    (product.stock || 0) === 0 ? 'opacity-50' : ''
+                  }`}>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-lg sm:text-xl font-semibold">{product.name}</h3>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        (product.stock || 0) > 10 ? 'bg-green-100 text-green-800' :
+                        (product.stock || 0) > 0 ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {(product.stock || 0) > 0 ? `${product.stock} left` : 'Out of stock'}
+                      </span>
+                    </div>
                     <p className="text-gray-600 mb-4 text-sm sm:text-base">{product.description}</p>
                     <div className="flex justify-between items-center">
                       <span className="text-xl sm:text-2xl font-bold text-amber-600">${product.price}</span>
                       <button
                         onClick={() => addToCart(product)}
-                        className="bg-amber-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:bg-amber-700 text-sm sm:text-base"
+                        disabled={(product.stock || 0) === 0}
+                        className={`px-3 py-2 sm:px-4 sm:py-2 rounded text-sm sm:text-base ${
+                          (product.stock || 0) === 0 
+                            ? 'bg-gray-400 text-white cursor-not-allowed'
+                            : 'bg-amber-600 text-white hover:bg-amber-700'
+                        }`}
                       >
-                        Add to Cart
+                        {(product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </button>
                     </div>
                   </div>

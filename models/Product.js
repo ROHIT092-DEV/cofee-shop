@@ -22,9 +22,30 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     default: '/placeholder-coffee.jpg',
   },
+  stock: {
+    type: Number,
+    default: 100,
+    min: 0,
+  },
+  lowStockThreshold: {
+    type: Number,
+    default: 10,
+  },
   inStock: {
     type: Boolean,
     default: true,
+  },
+  totalSold: {
+    type: Number,
+    default: 0,
+  },
+  isTrending: {
+    type: Boolean,
+    default: false,
+  },
+  isFeatured: {
+    type: Boolean,
+    default: false,
   },
 }, {
   timestamps: true,

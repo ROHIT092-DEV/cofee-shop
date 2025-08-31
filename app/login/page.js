@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -32,8 +33,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="flex items-center justify-center py-12">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold text-center mb-8">Login</h2>
         {error && (
           <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
@@ -78,6 +81,7 @@ export default function Login() {
             Register
           </Link>
         </p>
+        </div>
       </div>
     </div>
   );
