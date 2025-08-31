@@ -56,7 +56,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors duration-200 text-sm ${
                   isActive(link.href)
                     ? 'bg-amber-100 text-amber-700 font-medium'
                     : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
@@ -69,11 +69,11 @@ export default function Navbar() {
           </div>
 
           {/* User Info & Actions */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {user ? (
               <>
-                <div className="flex items-center space-x-3 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-2 rounded-lg border border-amber-200">
-                  <div className="w-8 h-8 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex items-center space-x-2 bg-amber-50 px-3 py-2 rounded-md border border-amber-200">
+                  <div className="w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -83,22 +83,22 @@ export default function Navbar() {
                 </div>
                 <button
                   onClick={logout}
-                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 text-sm font-medium transform hover:scale-105"
+                  className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 transition-colors text-sm font-medium"
                 >
                   🚪 Logout
                 </button>
               </>
             ) : (
-              <div className="flex space-x-3">
+              <div className="flex space-x-2">
                 <Link
                   href="/login"
-                  className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 text-sm font-medium transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors text-sm font-medium"
                 >
                   🔑 Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-200 text-sm font-medium transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors text-sm font-medium"
                 >
                   ✨ Register
                 </Link>
@@ -150,8 +150,8 @@ export default function Navbar() {
             
             {user ? (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex items-center space-x-3 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-3 rounded-lg border border-amber-200 mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full flex items-center justify-center text-white font-bold">
+                <div className="flex items-center space-x-3 bg-amber-50 px-4 py-3 rounded-md border border-amber-200 mb-3">
+                  <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -164,7 +164,7 @@ export default function Navbar() {
                     logout()
                     setIsMenuOpen(false)
                   }}
-                  className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-3 rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium transform hover:scale-105"
+                  className="w-full bg-red-500 text-white px-4 py-3 rounded-md hover:bg-red-600 transition-colors font-medium"
                 >
                   🚪 Logout
                 </button>
@@ -174,14 +174,14 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-3 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 font-medium text-center transform hover:scale-105 shadow-lg"
+                  className="block w-full bg-blue-500 text-white px-4 py-3 rounded-md hover:bg-blue-600 transition-colors font-medium text-center"
                 >
                   🔑 Login
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-3 rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-medium text-center transform hover:scale-105 shadow-lg"
+                  className="block w-full bg-amber-500 text-white px-4 py-3 rounded-md hover:bg-amber-600 transition-colors font-medium text-center"
                 >
                   ✨ Register
                 </Link>

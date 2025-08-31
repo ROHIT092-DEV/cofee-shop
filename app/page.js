@@ -147,198 +147,133 @@ export default function Home() {
         <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-100 via-orange-200 to-yellow-300 text-gray-800 min-h-screen flex items-center">
-        {/* Animated Background Elements */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-100 to-yellow-200 text-gray-800 py-16 md:py-24">
+        {/* Simplified Background */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}>
-            <div className="text-6xl opacity-20">☕</div>
+          <div className="absolute top-10 left-4 md:left-10 animate-pulse opacity-20">
+            <div className="text-2xl md:text-4xl">☕</div>
           </div>
-          <div className="absolute top-40 right-20 animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}>
-            <div className="text-4xl opacity-30">🥐</div>
+          <div className="absolute top-20 right-4 md:right-20 animate-pulse opacity-30">
+            <div className="text-xl md:text-3xl">🥐</div>
           </div>
-          <div className="absolute bottom-40 left-20 animate-bounce" style={{animationDelay: '2s', animationDuration: '3.5s'}}>
-            <div className="text-5xl opacity-25">🍵</div>
-          </div>
-          <div className="absolute top-60 left-1/3 animate-bounce" style={{animationDelay: '0.5s', animationDuration: '4.5s'}}>
-            <div className="text-3xl opacity-20">🥪</div>
-          </div>
-          <div className="absolute bottom-60 right-1/4 animate-bounce" style={{animationDelay: '1.5s', animationDuration: '3.8s'}}>
-            <div className="text-4xl opacity-30">🧁</div>
-          </div>
-          
-          {/* Floating Particles */}
-          <div className="absolute inset-0">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-white/10 rounded-full animate-pulse"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  animationDuration: `${2 + Math.random() * 3}s`
-                }}
-              />
-            ))}
-          </div>
-          
-          {/* Steam Animation */}
-          <div className="absolute top-1/4 right-1/4">
-            <div className="relative">
-              <div className="text-8xl opacity-30 animate-pulse">☕</div>
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="w-1 h-8 bg-white/20 rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
-              </div>
-              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 ml-2">
-                <div className="w-1 h-6 bg-white/15 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
-              </div>
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 -ml-1">
-                <div className="w-1 h-4 bg-white/10 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
-              </div>
-            </div>
+          <div className="absolute bottom-20 left-1/4 animate-pulse opacity-25">
+            <div className="text-2xl md:text-4xl">🍵</div>
           </div>
         </div>
         
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20"></div>
-        
         {/* Main Content */}
         <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="max-w-5xl mx-auto">
-            {/* Animated Title */}
-            <div className="mb-8">
-              <h2 className="text-5xl lg:text-8xl font-bold mb-4 leading-tight text-amber-900">
-                <span className="inline-block animate-fadeInUp" style={{animationDelay: '0.2s'}}>Premium</span>
-                <span className="inline-block animate-fadeInUp ml-4" style={{animationDelay: '0.4s'}}>Coffee</span>
-              </h2>
-              <div className="text-3xl lg:text-6xl text-orange-700 font-light">
-                <span className="inline-block animate-fadeInUp" style={{animationDelay: '0.6s'}}>Experience</span>
-                <span className="inline-block animate-fadeInUp ml-4" style={{animationDelay: '0.8s'}}>✨</span>
-              </div>
+          <div className="max-w-4xl mx-auto">
+            {/* Title */}
+            <div className="mb-6">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 text-amber-900">
+                Premium Coffee Experience
+              </h1>
+              <p className="text-lg md:text-xl text-orange-700">Crafted with passion ✨</p>
             </div>
             
-            {/* Animated Description */}
-            <p className="text-lg lg:text-2xl mb-8 max-w-4xl mx-auto text-gray-700 leading-relaxed animate-fadeInUp" style={{animationDelay: '1s'}}>
-              Discover our handcrafted beverages, artisanal pastries, and gourmet sandwiches. 
-              Every cup tells a story of passion and perfection.
+            {/* Description */}
+            <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto text-gray-700 leading-relaxed">
+              Discover our handcrafted beverages, artisanal pastries, and gourmet sandwiches.
             </p>
             
-            {/* Mobile-Optimized Real-time Stats */}
-            <div className="grid grid-cols-3 gap-2 mb-8 animate-fadeInUp" style={{animationDelay: '1.1s'}}>
-              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-3">
-                <div className="text-xl font-bold text-amber-800">{stats.users.toLocaleString()}</div>
-                <div className="text-xs text-gray-600">Customers</div>
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto">
+              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3">
+                <div className="text-lg md:text-xl font-bold text-amber-800">{stats.users.toLocaleString()}</div>
+                <div className="text-xs md:text-sm text-gray-600">Customers</div>
               </div>
-              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-3">
-                <div className="text-xl font-bold text-amber-800">{stats.orders.toLocaleString()}</div>
-                <div className="text-xs text-gray-600">Orders</div>
+              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3">
+                <div className="text-lg md:text-xl font-bold text-amber-800">{stats.orders.toLocaleString()}</div>
+                <div className="text-xs md:text-sm text-gray-600">Orders</div>
               </div>
-              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-3">
-                <div className="text-xl font-bold text-amber-800">{stats.products}</div>
-                <div className="text-xs text-gray-600">Items</div>
-              </div>
-            </div>
-            
-            {/* Animated Product Showcase */}
-            <div className="flex justify-center items-center space-x-8 mb-12 animate-fadeInUp" style={{animationDelay: '1.2s'}}>
-              <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="text-6xl mb-2 animate-bounce" style={{animationDelay: '0s'}}>☕</div>
-                <p className="text-sm font-medium">Premium Coffee</p>
-              </div>
-              <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="text-6xl mb-2 animate-bounce" style={{animationDelay: '0.5s'}}>🍵</div>
-                <p className="text-sm font-medium">Fresh Tea</p>
-              </div>
-              <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="text-6xl mb-2 animate-bounce" style={{animationDelay: '1s'}}>🥐</div>
-                <p className="text-sm font-medium">Artisan Pastries</p>
-              </div>
-              <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="text-6xl mb-2 animate-bounce" style={{animationDelay: '1.5s'}}>🥪</div>
-                <p className="text-sm font-medium">Gourmet Sandwiches</p>
+              <div className="text-center bg-white/30 backdrop-blur-sm rounded-lg p-3">
+                <div className="text-lg md:text-xl font-bold text-amber-800">{stats.products}</div>
+                <div className="text-xs md:text-sm text-gray-600">Items</div>
               </div>
             </div>
             
-            {/* Animated Buttons */}
+            {/* Product Icons */}
+            <div className="flex justify-center items-center space-x-4 md:space-x-8 mb-8">
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl mb-1">☕</div>
+                <p className="text-xs md:text-sm font-medium">Coffee</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl mb-1">🍵</div>
+                <p className="text-xs md:text-sm font-medium">Tea</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl mb-1">🥐</div>
+                <p className="text-xs md:text-sm font-medium">Pastries</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl mb-1">🥪</div>
+                <p className="text-xs md:text-sm font-medium">Sandwiches</p>
+              </div>
+            </div>
+            
+            {/* Action Buttons */}
             {!user && (
-              <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fadeInUp" style={{animationDelay: '1.4s'}}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                 <Link 
                   href="/register" 
-                  className="group bg-amber-600 text-white px-10 py-4 rounded-full font-bold hover:bg-amber-700 transition-all duration-500 text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105"
+                  className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors duration-200"
                 >
-                  <span className="flex items-center justify-center">
-                    Start Your Journey
-                    <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
-                  </span>
+                  Start Ordering
                 </Link>
                 <Link 
                   href="#menu" 
-                  className="group border-2 border-amber-600 text-amber-600 px-10 py-4 rounded-full font-bold hover:bg-amber-600 hover:text-white transition-all duration-500 text-lg transform hover:-translate-y-2 hover:scale-105"
+                  className="border-2 border-amber-600 text-amber-600 px-6 py-3 rounded-lg font-semibold hover:bg-amber-600 hover:text-white transition-colors duration-200"
                 >
-                  <span className="flex items-center justify-center">
-                    Explore Menu
-                    <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">↓</span>
-                  </span>
+                  View Menu
                 </Link>
               </div>
             )}
             
             {user && (
-              <div className="animate-fadeInUp" style={{animationDelay: '1.4s'}}>
+              <div>
                 <Link 
                   href={user.role === 'admin' ? '/admin' : '/dashboard'}
-                  className="group bg-amber-600 text-white px-10 py-4 rounded-full font-bold hover:bg-amber-700 transition-all duration-500 text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105"
+                  className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors duration-200"
                 >
-                  <span className="flex items-center justify-center">
-                    Go to Dashboard
-                    <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
-                  </span>
+                  Go to Dashboard
                 </Link>
               </div>
             )}
           </div>
         </div>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-amber-600/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-amber-600/50 rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
-        
-        {/* Bottom Gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
       </section>
 
       {/* Product List with Search & Filter */}
-      <section id="menu" className="py-16 lg:py-20 bg-white">
+      <section id="menu" className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">Our Complete Menu</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Explore our full range of premium beverages and gourmet food items
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">Our Menu</h2>
+            <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
+              Explore our premium beverages and gourmet food items
             </p>
           </div>
 
-          {/* Mobile-First Filters */}
-          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-4 mb-6 shadow-lg">
-            <div className="grid grid-cols-1 gap-3 mb-4">
+          {/* Filters */}
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Search Products</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
                 <input
                   type="text"
-                  placeholder="Search coffee, tea, pastries..."
+                  placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <select
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                 >
                   <option value="">All Categories</option>
                   <option value="coffee">☕ Coffee</option>
@@ -348,11 +283,11 @@ export default function Home() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Price Range</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
                 <select
                   value={priceRange}
                   onChange={(e) => setPriceRange(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                 >
                   <option value="">All Prices</option>
                   <option value="0-100">₹0 - ₹100</option>
@@ -362,11 +297,11 @@ export default function Home() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                 >
                   <option value="name">Name A-Z</option>
                   <option value="price-low">Price: Low to High</option>
@@ -375,13 +310,13 @@ export default function Home() {
                 </select>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
               <div className="text-sm text-gray-600">
                 Showing {products.length} products
               </div>
               <button
                 onClick={clearFilters}
-                className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-2 rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 text-sm font-medium"
+                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors text-sm"
               >
                 Clear Filters
               </button>
@@ -390,30 +325,30 @@ export default function Home() {
 
           {/* Products Grid */}
           {loading ? (
-            <div className="text-center py-20">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
-              <p className="mt-4 text-gray-600">Loading our delicious menu...</p>
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+              <p className="mt-3 text-gray-600">Loading menu...</p>
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">No products found</h3>
-              <p className="text-gray-600 mb-6">Try adjusting your search or filters</p>
+            <div className="text-center py-12">
+              <div className="text-4xl mb-3">🔍</div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">No products found</h3>
+              <p className="text-gray-600 mb-4">Try adjusting your search or filters</p>
               <button
                 onClick={clearFilters}
-                className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300"
+                className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition-colors"
               >
                 Show All Products
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {products.map((product) => (
-                <div key={product._id} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex flex-col">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold mb-2 w-fit ${
+                <div key={product._id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex flex-col gap-1">
+                        <span className={`px-2 py-1 rounded text-xs font-medium w-fit ${
                           product.category === 'coffee' ? 'bg-amber-100 text-amber-800' :
                           product.category === 'tea' ? 'bg-green-100 text-green-800' :
                           product.category === 'pastry' ? 'bg-pink-100 text-pink-800' :
@@ -421,36 +356,38 @@ export default function Home() {
                         }`}>
                           {product.category.toUpperCase()}
                         </span>
-                        {product.isTrending && (
-                          <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-bold w-fit">
-                            🔥 TRENDING
-                          </span>
-                        )}
-                        {product.isFeatured && (
-                          <span className="bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-xs font-bold w-fit mt-1">
-                            ⭐ FEATURED
-                          </span>
-                        )}
+                        <div className="flex gap-1">
+                          {product.isTrending && (
+                            <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">
+                              🔥 TRENDING
+                            </span>
+                          )}
+                          {product.isFeatured && (
+                            <span className="bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs font-medium">
+                              ⭐ FEATURED
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-amber-600">₹{product.price}</div>
+                        <div className="text-lg font-bold text-amber-600">₹{product.price}</div>
                         <div className="text-xs text-gray-500">{product.stock || 0} in stock</div>
                       </div>
                     </div>
-                    <h3 className="font-bold text-xl mb-3 group-hover:text-amber-600 transition-colors leading-tight">
+                    <h3 className="font-semibold text-base mb-2 text-gray-900">
                       {product.name}
                     </h3>
-                    <p className="text-gray-600 mb-4 leading-relaxed line-clamp-3">
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                       {product.description}
                     </p>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center space-x-2">
                         {(product.totalSold || 0) > 0 && (
-                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                             {product.totalSold} sold
                           </span>
                         )}
-                        <span className={`w-3 h-3 rounded-full ${
+                        <span className={`w-2 h-2 rounded-full ${
                           (product.stock || 0) > 10 ? 'bg-green-400' :
                           (product.stock || 0) > 0 ? 'bg-yellow-400' : 'bg-red-400'
                         }`}></span>
@@ -458,14 +395,14 @@ export default function Home() {
                       {user && user.role === 'customer' ? (
                         <Link 
                           href="/dashboard"
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-xl font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                          className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors"
                         >
                           Order Now
                         </Link>
                       ) : !user ? (
                         <Link 
                           href="/register"
-                          className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-2 rounded-xl font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
                         >
                           Join to Order
                         </Link>
@@ -478,17 +415,16 @@ export default function Home() {
           )}
 
           {!user && products.length > 0 && (
-            <div className="text-center mt-16 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Ready to taste perfection?</h3>
-              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Join thousands of coffee lovers who trust us for their daily dose of happiness. 
-                Register now and start your coffee journey!
+            <div className="text-center mt-8 bg-amber-50 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Ready to order?</h3>
+              <p className="text-gray-600 mb-4 max-w-lg mx-auto">
+                Join our coffee community and start ordering your favorites today!
               </p>
               <Link 
                 href="/register"
-                className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-xl transition-all duration-300 text-lg transform hover:-translate-y-1"
+                className="bg-amber-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-600 transition-colors"
               >
-                Start Ordering Today
+                Start Ordering
               </Link>
             </div>
           )}
@@ -496,59 +432,44 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 lg:py-20 bg-gradient-to-r from-slate-50 to-gray-100">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">🚀 Platform Features</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Everything you need for the perfect coffee ordering experience
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">Why Choose Us</h2>
+            <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
+              Everything you need for the perfect coffee experience
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">🔐</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Role-Based Authentication</h3>
-              <p className="text-gray-600">Secure login system with Customer and Admin roles, JWT token protection</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-3xl mb-3">🔐</div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">Secure Login</h3>
+              <p className="text-gray-600 text-sm">Safe and secure authentication for all users</p>
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">🛒</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Smart Cart System</h3>
-              <p className="text-gray-600">Add items to cart, manage quantities, real-time total calculation</p>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-3xl mb-3">🛒</div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">Easy Ordering</h3>
+              <p className="text-gray-600 text-sm">Simple cart system with real-time calculations</p>
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Inventory Management</h3>
-              <p className="text-gray-600">Real-time stock tracking, automatic updates, low stock alerts</p>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-3xl mb-3">📦</div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">Fresh Stock</h3>
+              <p className="text-gray-600 text-sm">Real-time inventory with fresh products daily</p>
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">🔥</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Trending Algorithm</h3>
-              <p className="text-gray-600">Products become trending with 5+ sales or admin marking, dynamic ranking</p>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-3xl mb-3">🔥</div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">Trending Items</h3>
+              <p className="text-gray-600 text-sm">Discover what's popular with other customers</p>
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">⭐</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Featured Products</h3>
-              <p className="text-gray-600">Admin-curated premium selections with special highlighting</p>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-3xl mb-3">⭐</div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">Premium Selection</h3>
+              <p className="text-gray-600 text-sm">Curated featured products for the best experience</p>
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">🔍</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Advanced Search & Filter</h3>
-              <p className="text-gray-600">Search by name, filter by category, price range, and popularity</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">📱</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Responsive Design</h3>
-              <p className="text-gray-600">Mobile-first design, works perfectly on all devices and screen sizes</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Order Management</h3>
-              <p className="text-gray-600">Complete order tracking, status updates, order history for users</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="text-4xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Beautiful Animations</h3>
-              <p className="text-gray-600">Smooth transitions, hover effects, and engaging user interactions</p>
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-3xl mb-3">📱</div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">Mobile Friendly</h3>
+              <p className="text-gray-600 text-sm">Perfect experience on all devices and screens</p>
             </div>
           </div>
         </div>
@@ -556,34 +477,37 @@ export default function Home() {
 
       {/* Featured Products */}
       {featuredProducts.length > 0 && (
-        <section className="py-16 lg:py-20 bg-gradient-to-r from-purple-50 to-pink-50">
+        <section className="py-12 md:py-16 bg-purple-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">⭐ Featured Products</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">⭐ Featured Products</h2>
+              <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
                 Handpicked selections from our premium collection
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProducts.map((product) => (
-                <div key={product._id} className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-3 border border-purple-100">
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">FEATURED</span>
-                      <span className="text-2xl font-bold text-purple-600">₹{product.price}</span>
+                <div key={product._id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-purple-200">
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs font-medium">⭐ FEATURED</span>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-purple-600">₹{product.price}</div>
+                        <div className="text-xs text-gray-500">{product.stock} in stock</div>
+                      </div>
                     </div>
-                    <h3 className="font-bold text-xl mb-3 group-hover:text-purple-600 transition-colors leading-tight">
+                    <h3 className="font-semibold text-base mb-2 text-gray-900">
                       {product.name}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">{product.description}</p>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                        {product.stock} in stock
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                        Premium quality
                       </span>
                       {user && user.role === 'customer' && (
                         <Link 
                           href="/dashboard"
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                          className="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors"
                         >
                           Order Now
                         </Link>
@@ -597,202 +521,92 @@ export default function Home() {
         </section>
       )}
 
-      {/* Trending of the Day - Special Highlight */}
+      {/* Trending Products */}
       {trendingProducts.length > 0 && (
-        <section className="relative py-20 lg:py-32 bg-gradient-to-br from-red-600 via-orange-600 to-yellow-500 overflow-hidden">
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0">
-            <div className="absolute top-10 left-10 animate-pulse">
-              <div className="text-8xl opacity-20">🔥</div>
-            </div>
-            <div className="absolute top-20 right-20 animate-bounce" style={{animationDelay: '1s'}}>
-              <div className="text-6xl opacity-30">⭐</div>
-            </div>
-            <div className="absolute bottom-20 left-1/4 animate-pulse" style={{animationDelay: '2s'}}>
-              <div className="text-7xl opacity-25">🔥</div>
-            </div>
-            <div className="absolute top-1/2 right-1/3 animate-bounce" style={{animationDelay: '0.5s'}}>
-              <div className="text-5xl opacity-20">⚡</div>
-            </div>
-          </div>
-          
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-black/20"></div>
-          
-          <div className="container mx-auto px-4 relative z-10">
-            {/* Animated Header */}
-            <div className="text-center mb-16">
-              <div className="inline-block animate-bounce mb-4">
-                <span className="text-6xl lg:text-8xl">🔥</span>
-              </div>
-              <h2 className="text-4xl lg:text-7xl font-black mb-6 text-white leading-tight">
-                <span className="animate-pulse">TRENDING</span>
-                <span className="block text-3xl lg:text-5xl text-yellow-200 font-light mt-2">
-                  of the Day
-                </span>
-              </h2>
-              <p className="text-xl lg:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-6">
-                🎆 Today's hottest picks that everyone's talking about!
+        <section className="py-12 md:py-16 bg-red-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">🔥 Trending Now</h2>
+              <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
+                Popular items that customers love
               </p>
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 max-w-4xl mx-auto mb-6">
-                <h3 className="text-2xl font-bold text-white mb-4">🏆 Trending Levels Explained</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                  <div className="bg-white/10 rounded-xl p-4">
-                    <div className="text-3xl mb-2">🔥</div>
-                    <div className="text-yellow-300 font-bold">Level 1: Hot</div>
-                    <div className="text-white/80 text-sm">5+ sales today</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-4">
-                    <div className="text-3xl mb-2">🔥🔥</div>
-                    <div className="text-orange-300 font-bold">Level 2: Viral</div>
-                    <div className="text-white/80 text-sm">15+ sales today</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-4">
-                    <div className="text-3xl mb-2">🔥🔥🔥</div>
-                    <div className="text-red-300 font-bold">Level 3: Legendary</div>
-                    <div className="text-white/80 text-sm">25+ sales today</div>
-                  </div>
-                </div>
-              </div>
-              <div className="inline-block bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
-                <span className="text-white font-bold text-lg">
-                  📈 {trendingProducts.reduce((sum, p) => sum + (p.totalSold || 0), 0)} total sales today!
-                </span>
-              </div>
             </div>
             
-            {/* Featured Trending Product - Hero Style */}
-            {trendingProducts[0] && (
-              <div className="mb-16">
-                <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg rounded-3xl p-8 lg:p-12 border border-white/20 shadow-2xl">
-                  <div className="text-center">
-                    <div className="inline-block bg-gradient-to-r from-yellow-400 to-red-500 text-black px-6 py-3 rounded-full font-black text-lg mb-6 animate-pulse">
-                      🏆 #1 TRENDING TODAY
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trendingProducts.map((product, index) => (
+                <div key={product._id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-red-200">
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">
+                        🔥 #{index + 1} TRENDING
+                      </span>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-red-600">₹{product.price}</div>
+                        <div className="text-xs text-gray-500">{product.stock} in stock</div>
+                      </div>
                     </div>
-                    <h3 className="text-3xl lg:text-5xl font-bold text-white mb-4">
-                      {trendingProducts[0].name}
+                    <h3 className="font-semibold text-base mb-2 text-gray-900">
+                      {product.name}
                     </h3>
-                    <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-                      {trendingProducts[0].description}
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {product.description}
                     </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-8">
-                      <div className="text-center">
-                        <div className="text-5xl lg:text-7xl font-black text-yellow-300">
-                          ₹{trendingProducts[0].price}
-                        </div>
-                        <div className="text-white/70 text-sm">Special Price</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl lg:text-5xl font-bold text-white">
-                          {trendingProducts[0].totalSold || 0}
-                        </div>
-                        <div className="text-white/70 text-sm">Sold Today</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl lg:text-5xl font-bold text-green-300">
-                          {trendingProducts[0].stock}
-                        </div>
-                        <div className="text-white/70 text-sm">Left in Stock</div>
-                      </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                        {product.totalSold || 0} sold today
+                      </span>
+                      {user && user.role === 'customer' && (
+                        <Link 
+                          href="/dashboard"
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
+                        >
+                          Order Now
+                        </Link>
+                      )}
                     </div>
-                    {user && user.role === 'customer' ? (
-                      <Link 
-                        href="/dashboard"
-                        className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-12 py-4 rounded-full font-black text-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
-                      >
-                        🚀 ORDER NOW - LIMITED TIME!
-                      </Link>
-                    ) : (
-                      <Link 
-                        href="/register"
-                        className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-12 py-4 rounded-full font-black text-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
-                      >
-                        🎆 JOIN TO ORDER!
-                      </Link>
-                    )}
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {/* Other Trending Items */}
-            {trendingProducts.length > 1 && (
-              <div>
-                <h3 className="text-2xl lg:text-3xl font-bold text-white text-center mb-8">
-                  🔥 More Hot Picks
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                  {trendingProducts.slice(1).map((product, index) => (
-                    <div key={product._id} className="group bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
-                      <div className="text-center">
-                        <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold mb-3 inline-block">
-                          #{index + 2} {(product.totalSold || 0) >= 25 ? '🔥🔥🔥 LEGENDARY' : (product.totalSold || 0) >= 15 ? '🔥🔥 VIRAL' : '🔥 HOT'}
-                        </div>
-                        <h4 className="font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">
-                          {product.name}
-                        </h4>
-                        <div className="text-2xl font-bold text-yellow-300 mb-2">
-                          ₹{product.price}
-                        </div>
-                        <div className="text-white/70 text-sm mb-4">
-                          {product.totalSold || 0} sold
-                        </div>
-                        {user && user.role === 'customer' && (
-                          <Link 
-                            href="/dashboard"
-                            className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-lg text-sm font-bold hover:shadow-lg transition-all duration-300 inline-block"
-                          >
-                            Order
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
-          
-          {/* Bottom Gradient */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent"></div>
         </section>
       )}
 
       {/* Customer Reviews */}
       {reviews.length > 0 && (
-        <section className="py-16 lg:py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <section className="py-12 md:py-16 bg-blue-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">⭐ What Our Customers Say</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Real reviews from real customers who love our coffee and service
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">⭐ Customer Reviews</h2>
+              <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
+                What our customers say about us
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.map((review) => (
-                <div key={review._id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                  <div className="flex items-center mb-4">
-                    <div className="flex text-yellow-400 mr-3">
+                <div key={review._id} className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center mb-3">
+                    <div className="flex text-yellow-400 mr-2">
                       {[...Array(review.rating)].map((_, i) => (
-                        <span key={i} className="text-xl">⭐</span>
+                        <span key={i} className="text-sm">⭐</span>
                       ))}
                     </div>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xs text-gray-500">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                   
-                  <p className="text-gray-700 mb-4 leading-relaxed italic">
+                  <p className="text-gray-700 mb-3 text-sm italic">
                     "{review.comment}"
                   </p>
                   
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-2 text-sm">
                       {review.user?.name?.charAt(0) || 'U'}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-800">{review.user?.name || 'Anonymous'}</div>
+                      <div className="font-medium text-gray-800 text-sm">{review.user?.name || 'Anonymous'}</div>
                       <div className="text-xs text-gray-500">Verified Customer</div>
                     </div>
                   </div>
@@ -801,10 +615,10 @@ export default function Home() {
             </div>
             
             {user && user.role === 'customer' && (
-              <div className="text-center mt-12">
+              <div className="text-center mt-8">
                 <Link 
                   href="/dashboard"
-                  className="inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                  className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
                 >
                   ⭐ Write Your Review
                 </Link>
@@ -815,40 +629,39 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-gray-900 to-black text-white py-16">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-3 text-amber-400">
                 ☕ Coffee Shop
               </h3>
-              <p className="text-gray-400 mb-6 leading-relaxed">
-                Crafting exceptional coffee experiences since day one. Every cup is a journey, 
-                every sip a moment of pure bliss.
+              <p className="text-gray-400 mb-4 text-sm">
+                Crafting exceptional coffee experiences since day one.
               </p>
-              <div className="flex space-x-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-                  <span className="text-white font-bold">f</span>
+              <div className="flex space-x-3">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
+                  <span className="text-white text-sm font-bold">f</span>
                 </div>
-                <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-                  <span className="text-white font-bold">@</span>
+                <div className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-pink-700 transition-colors">
+                  <span className="text-white text-sm font-bold">@</span>
                 </div>
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-                  <span className="text-white font-bold">t</span>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors">
+                  <span className="text-white text-sm font-bold">t</span>
                 </div>
               </div>
             </div>
             <div>
-              <h4 className="font-bold mb-4 text-lg">Quick Links</h4>
-              <div className="space-y-3">
-                <Link href="/login" className="block text-gray-400 hover:text-white transition-colors">Login</Link>
-                <Link href="/register" className="block text-gray-400 hover:text-white transition-colors">Register</Link>
-                <Link href="#menu" className="block text-gray-400 hover:text-white transition-colors">Menu</Link>
+              <h4 className="font-semibold mb-3">Quick Links</h4>
+              <div className="space-y-2">
+                <Link href="/login" className="block text-gray-400 hover:text-white transition-colors text-sm">Login</Link>
+                <Link href="/register" className="block text-gray-400 hover:text-white transition-colors text-sm">Register</Link>
+                <Link href="#menu" className="block text-gray-400 hover:text-white transition-colors text-sm">Menu</Link>
               </div>
             </div>
             <div>
-              <h4 className="font-bold mb-4 text-lg">Contact Info</h4>
-              <div className="text-gray-400 space-y-3">
+              <h4 className="font-semibold mb-3">Contact Info</h4>
+              <div className="text-gray-400 space-y-2 text-sm">
                 <p className="flex items-center"><span className="mr-2">📍</span> 123 Coffee Street, Bean City</p>
                 <p className="flex items-center"><span className="mr-2">📞</span> (555) 123-CAFE</p>
                 <p className="flex items-center"><span className="mr-2">✉️</span> hello@coffeeshop.com</p>
@@ -856,8 +669,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-            <p className="text-gray-400">&copy; 2024 Coffee Shop. Crafted with ❤️ for coffee lovers worldwide.</p>
+          <div className="border-t border-gray-800 mt-8 pt-6 text-center">
+            <p className="text-gray-400 text-sm">&copy; 2024 Coffee Shop. Made with ❤️ for coffee lovers.</p>
           </div>
         </div>
       </footer>
