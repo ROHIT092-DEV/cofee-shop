@@ -32,6 +32,8 @@ export default function CustomerDashboard() {
   const [showPayment, setShowPayment] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('upi')
   const [toast, setToast] = useState(null)
+  const [reviewRating, setReviewRating] = useState(0)
+  const [reviewComment, setReviewComment] = useState('')
 
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
@@ -134,6 +136,35 @@ export default function CustomerDashboard() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)
   }
 
+  const submitReview = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          rating: reviewRating,
+          comment: reviewComment.trim()
+        })
+      })
+
+      if (res.ok) {
+        setReviewRating(0)
+        setReviewComment('')
+        setToast({ message: 'Thank you for your review! It will be published after approval. ⭐', type: 'success' })
+      } else {
+        const error = await res.json()
+        setToast({ message: error.error || 'Error submitting review', type: 'error' })
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error)
+      setToast({ message: 'Error submitting review. Please try again.', type: 'error' })
+    }
+  }
+
 
 
   const placeOrder = async () => {
@@ -178,6 +209,8 @@ export default function CustomerDashboard() {
 
 
 
+
+
   if (!user) return <div className="flex items-center justify-center min-h-screen"><div className="text-lg">Loading...</div></div>
 
   return (
@@ -200,6 +233,12 @@ export default function CustomerDashboard() {
                 className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'orders' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
               >
                 📋 My Orders
+              </button>
+              <button 
+                onClick={() => setActiveTab('review')} 
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'review' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
+              >
+                ⭐ Review Shop
               </button>
             </div>
             <div className="text-sm sm:text-base text-amber-100">
@@ -430,11 +469,79 @@ export default function CustomerDashboard() {
                           🔔 Your order is ready for pickup!
                         </div>
                       )}
+                      
+
                     </div>
                   </div>
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'review' && (
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Review Our Shop</h2>
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4">⭐</div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">Share Your Experience</h3>
+                <p className="text-gray-600">Help other customers by sharing your thoughts about our coffee shop and service!</p>
+              </div>
+              
+              <div className="max-w-md mx-auto">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+                    <div className="flex justify-center space-x-2">
+                      {[1,2,3,4,5].map(star => (
+                        <button
+                          key={star}
+                          onClick={() => setReviewRating(star)}
+                          className={`text-3xl transition-all duration-200 hover:scale-110 ${
+                            star <= (reviewRating || 0) ? 'text-yellow-400' : 'text-gray-300'
+                          }`}
+                        >
+                          ⭐
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-center text-sm text-gray-500 mt-2">
+                      {reviewRating === 5 ? 'Excellent!' : 
+                       reviewRating === 4 ? 'Very Good!' :
+                       reviewRating === 3 ? 'Good!' :
+                       reviewRating === 2 ? 'Fair' :
+                       reviewRating === 1 ? 'Poor' : 'Select a rating'}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
+                    <textarea
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      placeholder="Tell us about your experience with our coffee shop, service, ambiance, or anything else..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      rows="4"
+                      maxLength="500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">{reviewComment.length}/500 characters</p>
+                  </div>
+                  
+                  <button
+                    onClick={submitReview}
+                    disabled={!reviewRating || !reviewComment.trim()}
+                    className="w-full bg-amber-600 text-white py-3 px-4 rounded-md hover:bg-amber-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-base font-medium transition-all duration-200"
+                  >
+                    Submit Review
+                  </button>
+                  
+                  <p className="text-xs text-gray-500 text-center">
+                    Your review will be reviewed by our team before being published on our website.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

@@ -7,6 +7,8 @@ export default function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [activeTab, setActiveTab] = useState('products');
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -38,6 +40,8 @@ export default function AdminDashboard() {
     setUser(parsedUser);
     fetchProducts();
     fetchOrders();
+    fetchUsers();
+    fetchReviews();
   }, []);
 
   useEffect(() => {
@@ -71,6 +75,108 @@ export default function AdminDashboard() {
       setOrders(data);
     } catch (error) {
       console.error('Error fetching orders:', error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+      if (res.ok) {
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error('Error updating user role:', error);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/admin/reviews', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setReviews(data);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
+  const approveReview = async (reviewId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/admin/reviews/${reviewId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ isApproved: true }),
+      });
+      if (res.ok) {
+        fetchReviews();
+      }
+    } catch (error) {
+      console.error('Error approving review:', error);
+    }
+  };
+
+  const deleteReview = async (reviewId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/admin/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        fetchReviews();
+      }
+    } catch (error) {
+      console.error('Error deleting review:', error);
     }
   };
 
@@ -247,6 +353,22 @@ export default function AdminDashboard() {
                 }`}
               >
                 📋 Orders ({orders.filter((o) => o.status !== 'completed').length})
+              </button>
+              <button
+                onClick={() => setActiveTab('users')}
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${
+                  activeTab === 'users' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
+                }`}
+              >
+                👥 Users ({users.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('reviews')}
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${
+                  activeTab === 'reviews' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
+                }`}
+              >
+                ⭐ Reviews ({reviews.filter(r => !r.isApproved).length})
               </button>
             </div>
             <div className="text-sm sm:text-base text-red-100">
@@ -723,6 +845,162 @@ export default function AdminDashboard() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'users' && (
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+              User Management
+            </h2>
+            
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+              <div className="space-y-4">
+                {users.map((userData) => (
+                  <div key={userData._id} className="border rounded-lg p-4 flex justify-between items-center">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg">{userData.name}</h3>
+                      <p className="text-gray-600 text-sm">{userData.email}</p>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          userData.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {userData.role === 'admin' ? '🔑 Admin' : '👤 Customer'}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          Joined: {new Date(userData.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <select
+                        value={userData.role}
+                        onChange={(e) => updateUserRole(userData._id, e.target.value)}
+                        className="px-3 py-1 border border-gray-300 rounded text-sm"
+                        disabled={userData._id === user._id}
+                      >
+                        <option value="customer">Customer</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                      
+                      {userData._id !== user._id && (
+                        <button
+                          onClick={() => {
+                            if (confirm(`Delete user ${userData.name}?`)) {
+                              deleteUser(userData._id);
+                            }
+                          }}
+                          className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'reviews' && (
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+              Review Management
+            </h2>
+            
+            <div className="space-y-6">
+              {/* Pending Reviews */}
+              {reviews.filter(r => !r.isApproved).length > 0 && (
+                <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+                  <h3 className="text-lg font-bold mb-4 text-orange-600">⏳ Pending Approval ({reviews.filter(r => !r.isApproved).length})</h3>
+                  <div className="space-y-4">
+                    {reviews.filter(r => !r.isApproved).map((review) => (
+                      <div key={review._id} className="border border-orange-200 rounded-lg p-4 bg-orange-50">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center">
+                            <div className="flex text-yellow-400 mr-3">
+                              {[...Array(review.rating)].map((_, i) => (
+                                <span key={i} className="text-lg">⭐</span>
+                              ))}
+                            </div>
+                            <div>
+                              <div className="font-semibold">{review.user?.name || 'Anonymous'}</div>
+                              <div className="text-xs text-gray-500">{new Date(review.createdAt).toLocaleString()}</div>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => approveReview(review._id)}
+                              className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                            >
+                              ✅ Approve
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (confirm('Delete this review?')) {
+                                  deleteReview(review._id);
+                                }
+                              }}
+                              className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                            >
+                              ❌ Delete
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-gray-700 italic">"{review.comment}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Approved Reviews */}
+              {reviews.filter(r => r.isApproved).length > 0 && (
+                <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+                  <h3 className="text-lg font-bold mb-4 text-green-600">✅ Published Reviews ({reviews.filter(r => r.isApproved).length})</h3>
+                  <div className="space-y-4">
+                    {reviews.filter(r => r.isApproved).map((review) => (
+                      <div key={review._id} className="border border-green-200 rounded-lg p-4 bg-green-50">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center">
+                            <div className="flex text-yellow-400 mr-3">
+                              {[...Array(review.rating)].map((_, i) => (
+                                <span key={i} className="text-lg">⭐</span>
+                              ))}
+                            </div>
+                            <div>
+                              <div className="font-semibold">{review.user?.name || 'Anonymous'}</div>
+                              <div className="text-xs text-gray-500">{new Date(review.createdAt).toLocaleString()}</div>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              if (confirm('Remove this review from website?')) {
+                                deleteReview(review._id);
+                              }
+                            }}
+                            className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <p className="text-gray-700 italic">"{review.comment}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {reviews.length === 0 && (
+                <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                  <div className="text-6xl mb-4">⭐</div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">No Reviews Yet</h3>
+                  <p className="text-gray-600">Customer reviews will appear here for approval.</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

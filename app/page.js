@@ -26,6 +26,8 @@ export default function Home() {
   const [products, setProducts] = useState([])
   const [trendingProducts, setTrendingProducts] = useState([])
   const [featuredProducts, setFeaturedProducts] = useState([])
+  const [stats, setStats] = useState({ users: 0, orders: 0, products: 0 })
+  const [reviews, setReviews] = useState([])
   const [user, setUser] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
@@ -42,6 +44,8 @@ export default function Home() {
     fetchProducts()
     fetchTrendingProducts()
     fetchFeaturedProducts()
+    fetchStats()
+    fetchReviews()
   }, [])
 
   useEffect(() => {
@@ -100,6 +104,26 @@ export default function Home() {
       setFeaturedProducts(data)
     } catch (error) {
       console.error('Error fetching featured products:', error)
+    }
+  }
+
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('/api/stats')
+      const data = await res.json()
+      setStats(data)
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    }
+  }
+
+  const fetchReviews = async () => {
+    try {
+      const res = await fetch('/api/reviews')
+      const data = await res.json()
+      setReviews(data)
+    } catch (error) {
+      console.error('Error fetching reviews:', error)
     }
   }
 
@@ -194,10 +218,26 @@ export default function Home() {
             </div>
             
             {/* Animated Description */}
-            <p className="text-lg lg:text-2xl mb-12 max-w-4xl mx-auto text-gray-700 leading-relaxed animate-fadeInUp" style={{animationDelay: '1s'}}>
+            <p className="text-lg lg:text-2xl mb-8 max-w-4xl mx-auto text-gray-700 leading-relaxed animate-fadeInUp" style={{animationDelay: '1s'}}>
               Discover our handcrafted beverages, artisanal pastries, and gourmet sandwiches. 
               Every cup tells a story of passion and perfection.
             </p>
+            
+            {/* Real-time Stats */}
+            <div className="flex justify-center items-center space-x-8 mb-12 animate-fadeInUp" style={{animationDelay: '1.1s'}}>
+              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                <div className="text-3xl font-bold text-amber-800">{stats.users.toLocaleString()}</div>
+                <div className="text-sm text-gray-600">Happy Customers</div>
+              </div>
+              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                <div className="text-3xl font-bold text-amber-800">{stats.orders.toLocaleString()}</div>
+                <div className="text-sm text-gray-600">Orders Served</div>
+              </div>
+              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                <div className="text-3xl font-bold text-amber-800">{stats.products}</div>
+                <div className="text-sm text-gray-600">Menu Items</div>
+              </div>
+            </div>
             
             {/* Animated Product Showcase */}
             <div className="flex justify-center items-center space-x-8 mb-12 animate-fadeInUp" style={{animationDelay: '1.2s'}}>
@@ -715,6 +755,62 @@ export default function Home() {
           
           {/* Bottom Gradient */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent"></div>
+        </section>
+      )}
+
+      {/* Customer Reviews */}
+      {reviews.length > 0 && (
+        <section className="py-16 lg:py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">⭐ What Our Customers Say</h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Real reviews from real customers who love our coffee and service
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {reviews.map((review) => (
+                <div key={review._id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="flex items-center mb-4">
+                    <div className="flex text-yellow-400 mr-3">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <span key={i} className="text-xl">⭐</span>
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(review.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <p className="text-gray-700 mb-4 leading-relaxed italic">
+                    "{review.comment}"
+                  </p>
+                  
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                      {review.user?.name?.charAt(0) || 'U'}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-800">{review.user?.name || 'Anonymous'}</div>
+                      <div className="text-xs text-gray-500">Verified Customer</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {user && user.role === 'customer' && (
+              <div className="text-center mt-12">
+                <Link 
+                  href="/dashboard"
+                  className="inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  ⭐ Write Your Review
+                </Link>
+              </div>
+            )}
+          </div>
         </section>
       )}
 
