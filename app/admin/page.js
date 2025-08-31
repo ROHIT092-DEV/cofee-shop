@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [filterCategory, setFilterCategory] = useState('');
   const [editingProduct, setEditingProduct] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [toast, setToast] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +48,13 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchProducts();
   }, [searchTerm, filterCategory]);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   const fetchProducts = async () => {
     try {
@@ -254,6 +262,28 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error verifying payment:', error);
+    }
+  };
+
+  const deleteOrder = async (orderId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        fetchOrders();
+        setToast({ message: 'Order deleted successfully', type: 'success' });
+      } else {
+        setToast({ message: 'Failed to delete order', type: 'error' });
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      setToast({ message: 'Error deleting order', type: 'error' });
     }
   };
 
@@ -840,6 +870,15 @@ export default function AdminDashboard() {
                           ❌ Payment rejected - Order cancelled
                         </div>
                       )}
+                      
+                      <div className="mt-3 pt-3 border-t">
+                        <button
+                          onClick={() => deleteOrder(order._id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600"
+                        >
+                          🗑️ Delete Order
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1132,6 +1171,12 @@ export default function AdminDashboard() {
           </div>
         )}
       </div>
+      
+      {toast && (
+        <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 }
