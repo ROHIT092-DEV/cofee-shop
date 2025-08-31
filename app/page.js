@@ -315,10 +315,10 @@ export default function Home() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
                 >
                   <option value="">All Prices</option>
-                  <option value="0-5">$0 - $5</option>
-                  <option value="5-10">$5 - $10</option>
-                  <option value="10-15">$10 - $15</option>
-                  <option value="15">$15+</option>
+                  <option value="0-100">₹0 - ₹100</option>
+                  <option value="100-300">₹100 - ₹300</option>
+                  <option value="300-500">₹300 - ₹500</option>
+                  <option value="500">₹500+</option>
                 </select>
               </div>
               <div>
@@ -393,7 +393,7 @@ export default function Home() {
                         )}
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-amber-600">${product.price}</div>
+                        <div className="text-2xl font-bold text-amber-600">₹{product.price}</div>
                         <div className="text-xs text-gray-500">{product.stock || 0} in stock</div>
                       </div>
                     </div>
@@ -530,7 +530,7 @@ export default function Home() {
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">FEATURED</span>
-                      <span className="text-2xl font-bold text-purple-600">${product.price}</span>
+                      <span className="text-2xl font-bold text-purple-600">₹{product.price}</span>
                     </div>
                     <h3 className="font-bold text-xl mb-3 group-hover:text-purple-600 transition-colors leading-tight">
                       {product.name}
@@ -638,7 +638,7 @@ export default function Home() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-8">
                       <div className="text-center">
                         <div className="text-5xl lg:text-7xl font-black text-yellow-300">
-                          ${trendingProducts[0].price}
+                          ₹{trendingProducts[0].price}
                         </div>
                         <div className="text-white/70 text-sm">Special Price</div>
                       </div>
@@ -692,7 +692,7 @@ export default function Home() {
                           {product.name}
                         </h4>
                         <div className="text-2xl font-bold text-yellow-300 mb-2">
-                          ${product.price}
+                          ₹{product.price}
                         </div>
                         <div className="text-white/70 text-sm mb-4">
                           {product.totalSold || 0} sold

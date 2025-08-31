@@ -28,8 +28,18 @@ const OrderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'preparing', 'ready', 'completed'],
+    enum: ['pending', 'preparing', 'ready', 'completed', 'cancelled'],
     default: 'pending',
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['upi', 'counter'],
+    default: 'counter',
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['cash', 'pending_verification', 'verified', 'rejected'],
+    default: 'cash',
   },
 }, {
   timestamps: true,

@@ -8,7 +8,8 @@ export async function PATCH(request, { params }) {
   try {
     await connectDB()
     
-    const { status } = await request.json()
+    const body = await request.json()
+    const { status, paymentStatus, paymentMethod } = body
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     
     if (!token) {
@@ -22,9 +23,13 @@ export async function PATCH(request, { params }) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
     }
 
+    const updateData = { status }
+    if (paymentStatus !== undefined) updateData.paymentStatus = paymentStatus
+    if (paymentMethod !== undefined) updateData.paymentMethod = paymentMethod
+    
     const order = await Order.findByIdAndUpdate(
       params.id,
-      { status },
+      updateData,
       { new: true }
     ).populate('user', 'name email').populate('items.product')
 

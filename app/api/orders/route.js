@@ -9,7 +9,7 @@ export async function POST(request) {
   try {
     await connectDB()
     
-    const { items, total } = await request.json()
+    const { items, total, paymentMethod, paymentStatus } = await request.json()
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     
     if (!token) {
@@ -52,7 +52,9 @@ export async function POST(request) {
       user: user._id,
       items,
       total,
-      status: 'pending'
+      status: 'pending',
+      paymentMethod: paymentMethod || 'counter',
+      paymentStatus: paymentStatus || 'cash'
     })
 
     await order.save()

@@ -3,6 +3,26 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 
+// Toast Component
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
+      type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+    }`}>
+      <div className="flex items-center space-x-2">
+        <span>{type === 'success' ? '✓' : '⚠'}</span>
+        <span>{message}</span>
+        <button onClick={onClose} className="ml-2 text-white hover:text-gray-200">×</button>
+      </div>
+    </div>
+  )
+}
+
 export default function CustomerDashboard() {
   const [user, setUser] = useState(null)
   const [products, setProducts] = useState([])
@@ -10,6 +30,9 @@ export default function CustomerDashboard() {
   const [orders, setOrders] = useState([])
   const [activeTab, setActiveTab] = useState('menu')
   const [showPayment, setShowPayment] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('upi')
+  const [toast, setToast] = useState(null)
+
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
   const router = useRouter()
@@ -70,7 +93,7 @@ export default function CustomerDashboard() {
     const currentQuantityInCart = existingItem ? existingItem.quantity : 0
     
     if (currentQuantityInCart >= (product.stock || 0)) {
-      alert(`Sorry, only ${product.stock} items available in stock!`)
+      setToast({ message: `Sorry, only ${product.stock} items available in stock!`, type: 'error' })
       return
     }
     
@@ -95,7 +118,7 @@ export default function CustomerDashboard() {
     } else {
       const product = products.find(p => p._id === productId)
       if (newQuantity > (product?.stock || 0)) {
-        alert(`Sorry, only ${product?.stock} items available in stock!`)
+        setToast({ message: `Sorry, only ${product?.stock} items available in stock!`, type: 'error' })
         return
       }
       
@@ -110,6 +133,8 @@ export default function CustomerDashboard() {
   const getTotalPrice = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)
   }
+
+
 
   const placeOrder = async () => {
     try {
@@ -128,7 +153,9 @@ export default function CustomerDashboard() {
         },
         body: JSON.stringify({
           items: orderItems,
-          total: parseFloat(getTotalPrice())
+          total: parseFloat(getTotalPrice()),
+          paymentMethod,
+          paymentStatus: paymentMethod === 'upi' ? 'pending_verification' : 'cash'
         })
       })
 
@@ -136,12 +163,16 @@ export default function CustomerDashboard() {
         setCart([])
         setShowPayment(false)
         fetchOrders()
-        fetchProducts() // Refresh products to show updated stock
-        alert('Order placed successfully!')
+        fetchProducts()
+        if (paymentMethod === 'upi') {
+          setToast({ message: 'Order placed! Admin will verify payment and confirm. 📱', type: 'success' })
+        } else {
+          setToast({ message: 'Order placed successfully! 🎉', type: 'success' })
+        }
       }
     } catch (error) {
       console.error('Error placing order:', error)
-      alert('Error placing order')
+      setToast({ message: 'Error placing order. Please try again.', type: 'error' })
     }
   }
 
@@ -220,7 +251,7 @@ export default function CustomerDashboard() {
                     </div>
                     <p className="text-gray-600 mb-4 text-sm sm:text-base">{product.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className="text-xl sm:text-2xl font-bold text-amber-600">${product.price}</span>
+                      <span className="text-xl sm:text-2xl font-bold text-amber-600">₹{product.price}</span>
                       <button
                         onClick={() => addToCart(product)}
                         disabled={(product.stock || 0) === 0}
@@ -248,7 +279,7 @@ export default function CustomerDashboard() {
                     <div key={item._id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 p-2 border-b space-y-2 sm:space-y-0">
                       <div className="flex-1">
                         <div className="font-medium text-sm sm:text-base">{item.name}</div>
-                        <div className="text-xs sm:text-sm text-gray-600">${item.price} each</div>
+                        <div className="text-xs sm:text-sm text-gray-600">₹{item.price} each</div>
                       </div>
                       <div className="flex items-center justify-between sm:justify-end space-x-2">
                         <div className="flex items-center space-x-2">
@@ -277,7 +308,7 @@ export default function CustomerDashboard() {
                   ))}
                   <div className="border-t pt-4 mt-4">
                     <div className="flex justify-between items-center font-bold text-base sm:text-lg">
-                      <span>Total: ${getTotalPrice()}</span>
+                      <span>Total: ₹{getTotalPrice()}</span>
                     </div>
                     <button 
                       onClick={() => setShowPayment(true)}
@@ -310,27 +341,95 @@ export default function CustomerDashboard() {
                           {new Date(order.createdAt).toLocaleDateString()}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded text-xs sm:text-sm font-medium self-start ${
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        order.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
-                        order.status === 'ready' ? 'bg-green-100 text-green-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                      </span>
+                      <div className="flex flex-col items-end space-y-2">
+                        <span className={`px-3 py-1 rounded text-xs sm:text-sm font-medium ${
+                          order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          order.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
+                          order.status === 'ready' ? 'bg-green-100 text-green-800' :
+                          order.status === 'completed' ? 'bg-purple-100 text-purple-800' :
+                          order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {order.status === 'pending' && '⏳ Order Received'}
+                          {order.status === 'preparing' && '👨‍🍳 Being Prepared'}
+                          {order.status === 'ready' && '🔔 Ready for Pickup'}
+                          {order.status === 'completed' && '✅ Completed'}
+                          {order.status === 'cancelled' && '❌ Cancelled'}
+                        </span>
+                        
+                        {/* Payment Status for UPI orders */}
+                        {order.paymentMethod === 'upi' && order.paymentStatus && (
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${
+                            order.paymentStatus === 'pending_verification' ? 'bg-orange-100 text-orange-800' :
+                            order.paymentStatus === 'verified' ? 'bg-green-100 text-green-800' :
+                            order.paymentStatus === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {order.paymentStatus === 'pending_verification' && '📱 Payment Pending'}
+                            {order.paymentStatus === 'verified' && '✅ Payment Verified'}
+                            {order.paymentStatus === 'rejected' && '❌ Payment Rejected'}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-2">
                       {order.items.map((item, index) => (
                         <div key={index} className="flex justify-between text-sm">
                           <span className="flex-1 pr-2">{item.product?.name || 'Product'} × {item.quantity}</span>
-                          <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                          <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
                     <div className="border-t pt-3 mt-3">
-                      <div className="flex justify-between font-bold text-base">
-                        <span>Total: ${order.total.toFixed(2)}</span>
+                      <div className="flex justify-between items-center font-bold text-base">
+                        <span>Total: ₹{order.total.toFixed(2)}</span>
+                        <span className="text-xs text-gray-500">
+                          {order.paymentMethod === 'upi' ? '📱 UPI Payment' : '💵 Counter Payment'}
+                        </span>
                       </div>
+                      
+                      {/* Order Progress Indicator */}
+                      <div className="mt-3">
+                        <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+                          <span>Order Progress</span>
+                          <span>
+                            {order.status === 'pending' && '1/4'}
+                            {order.status === 'preparing' && '2/4'}
+                            {order.status === 'ready' && '3/4'}
+                            {order.status === 'completed' && '4/4'}
+                            {order.status === 'cancelled' && 'Cancelled'}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className={`h-2 rounded-full transition-all duration-500 ${
+                            order.status === 'pending' ? 'w-1/4 bg-yellow-500' :
+                            order.status === 'preparing' ? 'w-2/4 bg-blue-500' :
+                            order.status === 'ready' ? 'w-3/4 bg-green-500' :
+                            order.status === 'completed' ? 'w-full bg-purple-500' :
+                            order.status === 'cancelled' ? 'w-full bg-red-500' :
+                            'w-0'
+                          }`}></div>
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                          <span>Received</span>
+                          <span>Preparing</span>
+                          <span>Ready</span>
+                          <span>Complete</span>
+                        </div>
+                      </div>
+                      
+                      {/* Estimated Time */}
+                      {order.status === 'preparing' && (
+                        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+                          ⏱️ Estimated time: 10-15 minutes
+                        </div>
+                      )}
+                      
+                      {order.status === 'ready' && (
+                        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-800 animate-pulse">
+                          🔔 Your order is ready for pickup!
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -341,26 +440,115 @@ export default function CustomerDashboard() {
 
         {showPayment && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-4 sm:p-8 max-w-md w-full">
-              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Manual Payment</h3>
+            <div className="bg-white rounded-lg p-4 sm:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Payment Options</h3>
               <div className="space-y-4">
                 <div className="bg-gray-50 p-3 sm:p-4 rounded">
                   <h4 className="font-semibold mb-2 text-sm sm:text-base">Order Summary</h4>
                   {cart.map((item) => (
                     <div key={item._id} className="flex justify-between text-xs sm:text-sm mb-1">
                       <span className="flex-1 pr-2">{item.name} × {item.quantity}</span>
-                      <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                   <div className="border-t pt-2 mt-2 font-bold text-sm sm:text-base">
-                    Total: ${getTotalPrice()}
+                    Total: ₹{getTotalPrice()}
                   </div>
                 </div>
-                <div className="bg-blue-50 p-3 sm:p-4 rounded">
-                  <p className="text-xs sm:text-sm text-blue-800">
-                    Please pay ${getTotalPrice()} at the counter when you collect your order.
-                  </p>
+                
+                {/* Payment Method Selection */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm sm:text-base">Choose Payment Method</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <input 
+                        type="radio" 
+                        name="payment" 
+                        value="upi" 
+                        checked={paymentMethod === 'upi'}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="text-blue-600"
+                      />
+                      <div className="flex items-center space-x-2">
+                        <span className="text-2xl">📱</span>
+                        <span className="font-medium">UPI Payment</span>
+                      </div>
+                    </label>
+                    <label className="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <input 
+                        type="radio" 
+                        name="payment" 
+                        value="counter" 
+                        checked={paymentMethod === 'counter'}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="text-blue-600"
+                      />
+                      <div className="flex items-center space-x-2">
+                        <span className="text-2xl">💵</span>
+                        <span className="font-medium">Pay at Counter</span>
+                      </div>
+                    </label>
+                  </div>
                 </div>
+
+                {/* UPI Payment Section */}
+                {paymentMethod === 'upi' && (
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="text-center">
+                      <h5 className="font-semibold mb-3">Scan QR Code to Pay</h5>
+                      
+                      {/* Large QR Code Image */}
+                      <div className="bg-white p-6 rounded-xl shadow-lg inline-block mb-6">
+                        <img 
+                          src="/qr-code.png" 
+                          alt="UPI QR Code" 
+                          className="w-64 h-64 sm:w-80 sm:h-80 object-contain mx-auto"
+                          onError={(e) => {
+                            e.target.style.display = 'none'
+                            e.target.nextSibling.style.display = 'flex'
+                          }}
+                        />
+                        <div className="w-64 h-64 sm:w-80 sm:h-80 bg-gray-200 flex items-center justify-center text-gray-500 mx-auto" style={{display: 'none'}}>
+                          <div className="text-center">
+                            <div className="text-6xl mb-4">📱</div>
+                            <div className="text-lg font-medium">Add your QR code</div>
+                            <div className="text-sm mt-2 text-gray-400">Save as qr-code.png in public folder</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-lg mb-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold mb-1">₹{getTotalPrice()}</div>
+                          <div className="text-sm opacity-90">Scan with any UPI app to pay</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                        <div className="flex items-center space-x-2 text-amber-800">
+                          <span className="text-xl">ℹ️</span>
+                          <div className="text-sm">
+                            <p className="font-medium">After payment, place your order.</p>
+                            <p>Admin will verify payment before confirming.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Counter Payment Section */}
+                {paymentMethod === 'counter' && (
+                  <div className="bg-amber-50 p-4 rounded-lg">
+                    <div className="flex items-center space-x-2 text-amber-800">
+                      <span className="text-xl">ℹ️</span>
+                      <p className="text-sm">
+                        Please pay ₹{getTotalPrice()} at the counter when you collect your order.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                   <button 
                     onClick={() => setShowPayment(false)}
@@ -370,9 +558,9 @@ export default function CustomerDashboard() {
                   </button>
                   <button 
                     onClick={placeOrder}
-                    className="flex-1 bg-green-600 text-white py-3 px-4 rounded hover:bg-green-700 text-sm sm:text-base"
+                    className="flex-1 bg-green-600 text-white py-3 px-4 rounded hover:bg-green-700 text-sm sm:text-base transition-all duration-200"
                   >
-                    Confirm Order
+                    {paymentMethod === 'upi' ? 'Place Order (Pending Verification)' : 'Confirm Order'}
                   </button>
                 </div>
               </div>
@@ -380,6 +568,15 @@ export default function CustomerDashboard() {
           </div>
         )}
       </div>
+      
+      {/* Toast Notification */}
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   )
 }

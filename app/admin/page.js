@@ -128,6 +128,31 @@ export default function AdminDashboard() {
     }
   };
 
+  const verifyPayment = async (orderId, isVerified) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ 
+          paymentStatus: isVerified ? 'verified' : 'rejected',
+          status: isVerified ? 'preparing' : 'cancelled'
+        }),
+      });
+
+      if (res.ok) {
+        fetchOrders();
+      }
+    } catch (error) {
+      console.error('Error verifying payment:', error);
+    }
+  };
+
+
+
   const updateStock = async (productId, newStock) => {
     try {
       const res = await fetch(`/api/products/${productId}`, {
@@ -404,7 +429,7 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-center mt-2">
                       <div>
                         <span className="font-bold text-green-600 text-lg">
-                          ${product.price}
+                          ₹{product.price}
                         </span>
                         <div className="text-xs text-gray-500 mt-1">
                           Sold: {product.totalSold || 0}
@@ -449,9 +474,120 @@ export default function AdminDashboard() {
 
         {activeTab === 'orders' && (
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
-              Order Management
-            </h2>
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold">
+                Order Management
+              </h2>
+              <button
+                onClick={() => {
+                  const testOrder = {
+                    _id: 'test-upi-order',
+                    user: { name: 'Test Customer' },
+                    items: [{ product: { name: 'Test Coffee' }, quantity: 1, price: 50 }],
+                    total: 50,
+                    status: 'pending',
+                    paymentMethod: 'upi',
+                    paymentStatus: 'pending_verification',
+                    createdAt: new Date().toISOString()
+                  };
+                  setOrders([testOrder, ...orders.filter(o => o._id !== 'test-upi-order')]);
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+              >
+                Show Payment Verification
+              </button>
+            </div>
+            
+            {/* Payment Verification Section - Always show if there are UPI orders */}
+            {(() => {
+              const pendingUPIOrders = orders.filter(order => order.paymentMethod === 'upi' && order.paymentStatus === 'pending_verification');
+              console.log('Checking for UPI orders:', pendingUPIOrders);
+              return pendingUPIOrders.length > 0;
+            })() && (
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-xl p-6 mb-6 shadow-lg">
+                <div className="flex items-center mb-4">
+                  <div className="bg-yellow-500 text-white rounded-full p-2 mr-3">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-yellow-800">🔔 Payment Verification Required</h3>
+                    <p className="text-yellow-700">UPI payments waiting for your approval</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  {orders.filter(order => order.paymentMethod === 'upi' && order.paymentStatus === 'pending_verification').map((order) => (
+                    <div key={order._id} className="bg-white border-2 border-yellow-200 rounded-lg p-4 shadow-md">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
+                        <div>
+                          <h4 className="font-bold text-lg text-gray-800">Order #{order._id.slice(-6)}</h4>
+                          <p className="text-gray-600">Customer: {order.user?.name || 'Unknown'}</p>
+                          <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleString()}</p>
+                        </div>
+                        <div className="text-right mt-2 sm:mt-0">
+                          <div className="text-2xl font-bold text-green-600">₹{order.total.toFixed(2)}</div>
+                          <div className="text-sm text-gray-500">Amount to verify</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                        <h5 className="font-medium text-gray-700 mb-2">Order Items:</h5>
+                        <div className="space-y-1">
+                          {order.items.map((item, index) => (
+                            <div key={index} className="flex justify-between text-sm">
+                              <span>{item.product?.name || 'Product'} × {item.quantity}</span>
+                              <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <button
+                          onClick={() => {
+                            if (order._id === 'test-upi-order') {
+                              // Handle test order locally
+                              setOrders(orders.map(o => 
+                                o._id === 'test-upi-order' 
+                                  ? { ...o, paymentStatus: 'verified', status: 'preparing' }
+                                  : o
+                              ));
+                              alert('✅ Payment approved! Order is now preparing.');
+                            } else {
+                              verifyPayment(order._id, true);
+                            }
+                          }}
+                          className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                        >
+                          ✅ PAYMENT RECEIVED - APPROVE ORDER
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (order._id === 'test-upi-order') {
+                              // Handle test order locally
+                              setOrders(orders.map(o => 
+                                o._id === 'test-upi-order' 
+                                  ? { ...o, paymentStatus: 'rejected', status: 'cancelled' }
+                                  : o
+                              ));
+                              alert('❌ Payment rejected! Order has been cancelled.');
+                            } else {
+                              verifyPayment(order._id, false);
+                            }
+                          }}
+                          className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                        >
+                          ❌ PAYMENT NOT RECEIVED - REJECT ORDER
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             {orders.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <p className="text-gray-500">No orders yet</p>
@@ -475,7 +611,7 @@ export default function AdminDashboard() {
                           {new Date(order.createdAt).toLocaleString()}
                         </p>
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex flex-col space-y-2">
                         <select
                           value={order.status}
                           onChange={(e) =>
@@ -496,6 +632,42 @@ export default function AdminDashboard() {
                           <option value="ready">Ready</option>
                           <option value="completed">Completed</option>
                         </select>
+                        
+                        {/* Quick Action Buttons */}
+                        {order.status === 'pending' && (
+                          <div className="flex space-x-1">
+                            <button
+                              onClick={() => updateOrderStatus(order._id, 'preparing')}
+                              className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
+                            >
+                              ✅ Accept Order
+                            </button>
+                            <button
+                              onClick={() => updateOrderStatus(order._id, 'cancelled')}
+                              className="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700"
+                            >
+                              ❌ Reject
+                            </button>
+                          </div>
+                        )}
+                        
+                        {order.status === 'preparing' && (
+                          <button
+                            onClick={() => updateOrderStatus(order._id, 'ready')}
+                            className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700"
+                          >
+                            🔔 Mark Ready
+                          </button>
+                        )}
+                        
+                        {order.status === 'ready' && (
+                          <button
+                            onClick={() => updateOrderStatus(order._id, 'completed')}
+                            className="bg-purple-600 text-white px-3 py-1 rounded text-xs hover:bg-purple-700"
+                          >
+                            ✅ Complete Order
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -508,20 +680,44 @@ export default function AdminDashboard() {
                             {item.product?.name || 'Product'} × {item.quantity}
                           </span>
                           <span className="font-medium">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            ₹{(item.price * item.quantity).toFixed(2)}
                           </span>
                         </div>
                       ))}
                     </div>
                     <div className="border-t pt-3 mt-3">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-1 sm:space-y-0">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
                         <span className="font-bold text-base">
-                          Total: ${order.total.toFixed(2)}
+                          Total: ₹{order.total.toFixed(2)}
                         </span>
-                        <span className="text-xs sm:text-sm text-gray-600">
-                          Payment: Manual (at counter)
-                        </span>
+                        <div className="text-xs sm:text-sm text-gray-600">
+                          Payment: {order.paymentMethod === 'upi' ? 'UPI' : 'Counter'}
+                          {order.paymentStatus && (
+                            <span className={`ml-2 px-2 py-1 rounded text-xs font-medium ${
+                              order.paymentStatus === 'pending_verification' ? 'bg-yellow-100 text-yellow-800' :
+                              order.paymentStatus === 'verified' ? 'bg-green-100 text-green-800' :
+                              order.paymentStatus === 'rejected' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {order.paymentStatus.replace('_', ' ').toUpperCase()}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                      
+
+                      
+                      {order.paymentStatus === 'verified' && (
+                        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-800">
+                          ✅ Payment verified by admin
+                        </div>
+                      )}
+                      
+                      {order.paymentStatus === 'rejected' && (
+                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-800">
+                          ❌ Payment rejected - Order cancelled
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
