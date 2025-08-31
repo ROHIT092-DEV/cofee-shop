@@ -2,7 +2,7 @@
 
 ## Environment Variables for Render
 
-Set these environment variables in your Render dashboard:
+**CRITICAL**: Set these environment variables in your Render dashboard:
 
 ```
 MONGODB_URI=mongodb+srv://prohit2914:rohit@cluster0.g9m7oxu.mongodb.net/coffeeshop?retryWrites=true&w=majority&appName=Cluster0
@@ -10,6 +10,8 @@ NEXTAUTH_SECRET=coffee-shop-nextauth-secret-2024-production
 NEXTAUTH_URL=https://cofee-shop-tts9.onrender.com
 JWT_SECRET=coffee-shop-jwt-secret-2024-production
 ```
+
+**The JWT_SECRET is REQUIRED** - without it, all admin functions will fail with 500 errors.
 
 ## Steps to Fix Production Issues:
 

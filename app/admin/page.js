@@ -80,9 +80,10 @@ export default function AdminDashboard() {
         },
       });
       const data = await res.json();
-      setOrders(data);
+      setOrders(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching orders:', error);
+      setOrders([]);
     }
   };
 
@@ -95,9 +96,10 @@ export default function AdminDashboard() {
         },
       });
       const data = await res.json();
-      setUsers(data);
+      setUsers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching users:', error);
+      setUsers([]);
     }
   };
 
@@ -146,9 +148,10 @@ export default function AdminDashboard() {
         },
       });
       const data = await res.json();
-      setReviews(data);
+      setReviews(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching reviews:', error);
+      setReviews([]);
     }
   };
 
@@ -385,7 +388,7 @@ export default function AdminDashboard() {
                   activeTab === 'orders' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
-                📋 Orders ({orders.filter((o) => o.status !== 'completed').length})
+                📋 Orders ({(orders || []).filter((o) => o.status !== 'completed').length})
               </button>
               <button
                 onClick={() => setActiveTab('users')}
@@ -393,7 +396,7 @@ export default function AdminDashboard() {
                   activeTab === 'users' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
-                👥 Users ({users.length})
+                👥 Users ({(users || []).length})
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
@@ -401,7 +404,7 @@ export default function AdminDashboard() {
                   activeTab === 'reviews' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
-                ⭐ Reviews ({reviews.filter(r => !r.isApproved).length})
+                ⭐ Reviews ({(reviews || []).filter(r => !r.isApproved).length})
               </button>
             </div>
           </div>
@@ -642,7 +645,7 @@ export default function AdminDashboard() {
                     paymentStatus: 'pending_verification',
                     createdAt: new Date().toISOString()
                   };
-                  setOrders([testOrder, ...orders.filter(o => o._id !== 'test-upi-order')]);
+                  setOrders([testOrder, ...(orders || []).filter(o => o._id !== 'test-upi-order')]);
                 }}
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
               >
@@ -652,7 +655,7 @@ export default function AdminDashboard() {
             
             {/* Payment Verification Section - Always show if there are UPI orders */}
             {(() => {
-              const pendingUPIOrders = orders.filter(order => order.paymentMethod === 'upi' && order.paymentStatus === 'pending_verification');
+              const pendingUPIOrders = (orders || []).filter(order => order.paymentMethod === 'upi' && order.paymentStatus === 'pending_verification');
               console.log('Checking for UPI orders:', pendingUPIOrders);
               return pendingUPIOrders.length > 0;
             })() && (
@@ -670,7 +673,7 @@ export default function AdminDashboard() {
                 </div>
                 
                 <div className="space-y-4">
-                  {orders.filter(order => order.paymentMethod === 'upi' && order.paymentStatus === 'pending_verification').map((order) => (
+                  {(orders || []).filter(order => order.paymentMethod === 'upi' && order.paymentStatus === 'pending_verification').map((order) => (
                     <div key={order._id} className="bg-white border-2 border-yellow-200 rounded-lg p-4 shadow-md">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
                         <div>
@@ -701,7 +704,7 @@ export default function AdminDashboard() {
                           onClick={() => {
                             if (order._id === 'test-upi-order') {
                               // Handle test order locally
-                              setOrders(orders.map(o => 
+                              setOrders((orders || []).map(o => 
                                 o._id === 'test-upi-order' 
                                   ? { ...o, paymentStatus: 'verified', status: 'preparing' }
                                   : o
@@ -719,7 +722,7 @@ export default function AdminDashboard() {
                           onClick={() => {
                             if (order._id === 'test-upi-order') {
                               // Handle test order locally
-                              setOrders(orders.map(o => 
+                              setOrders((orders || []).map(o => 
                                 o._id === 'test-upi-order' 
                                   ? { ...o, paymentStatus: 'rejected', status: 'cancelled' }
                                   : o
@@ -740,13 +743,13 @@ export default function AdminDashboard() {
               </div>
             )}
             
-            {orders.length === 0 ? (
+            {(orders || []).length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <p className="text-gray-500">No orders yet</p>
               </div>
             ) : (
               <div className="space-y-3 sm:space-y-4">
-                {orders.map((order) => (
+                {(orders || []).map((order) => (
                   <div
                     key={order._id}
                     className="bg-white rounded-lg shadow-md p-4 sm:p-6"
@@ -895,7 +898,7 @@ export default function AdminDashboard() {
             
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
               <div className="space-y-4">
-                {users.map((userData) => (
+                {(users || []).map((userData) => (
                   <div key={userData._id} className="border rounded-lg p-4 flex justify-between items-center">
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg">{userData.name}</h3>
@@ -951,11 +954,11 @@ export default function AdminDashboard() {
             
             <div className="space-y-6">
               {/* Pending Reviews */}
-              {reviews.filter(r => !r.isApproved).length > 0 && (
+              {(reviews || []).filter(r => !r.isApproved).length > 0 && (
                 <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-                  <h3 className="text-lg font-bold mb-4 text-orange-600">⏳ Pending Approval ({reviews.filter(r => !r.isApproved).length})</h3>
+                  <h3 className="text-lg font-bold mb-4 text-orange-600">⏳ Pending Approval ({(reviews || []).filter(r => !r.isApproved).length})</h3>
                   <div className="space-y-4">
-                    {reviews.filter(r => !r.isApproved).map((review) => (
+                    {(reviews || []).filter(r => !r.isApproved).map((review) => (
                       <div key={review._id} className="border border-orange-200 rounded-lg p-4 bg-orange-50">
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex items-center">
@@ -996,11 +999,11 @@ export default function AdminDashboard() {
               )}
               
               {/* Approved Reviews */}
-              {reviews.filter(r => r.isApproved).length > 0 && (
+              {(reviews || []).filter(r => r.isApproved).length > 0 && (
                 <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-                  <h3 className="text-lg font-bold mb-4 text-green-600">✅ Published Reviews ({reviews.filter(r => r.isApproved).length})</h3>
+                  <h3 className="text-lg font-bold mb-4 text-green-600">✅ Published Reviews ({(reviews || []).filter(r => r.isApproved).length})</h3>
                   <div className="space-y-4">
-                    {reviews.filter(r => r.isApproved).map((review) => (
+                    {(reviews || []).filter(r => r.isApproved).map((review) => (
                       <div key={review._id} className="border border-green-200 rounded-lg p-4 bg-green-50">
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex items-center">
@@ -1032,7 +1035,7 @@ export default function AdminDashboard() {
                 </div>
               )}
               
-              {reviews.length === 0 && (
+              {(reviews || []).length === 0 && (
                 <div className="bg-white rounded-lg shadow-md p-8 text-center">
                   <div className="text-6xl mb-4">⭐</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">No Reviews Yet</h3>

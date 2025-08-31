@@ -13,6 +13,10 @@ export async function GET(request) {
       return NextResponse.json({ error: 'No token provided' }, { status: 401 })
     }
 
+    if (!process.env.JWT_SECRET) {
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findById(decoded.userId)
     
@@ -24,6 +28,7 @@ export async function GET(request) {
 
     return NextResponse.json(users)
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Users API Error:', error)
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 })
   }
 }
