@@ -333,14 +333,17 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      {/* Admin Tabs */}
-      <div className="bg-red-800 text-white p-4">
+      {/* Mobile-First Admin Tabs */}
+      <div className="bg-red-800 text-white p-3 sticky top-0 z-40">
         <div className="container mx-auto">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-            <div className="flex space-x-2 mb-2 sm:mb-0">
+          <div className="flex flex-col space-y-3">
+            <div className="text-center text-red-100 font-medium">
+              Admin Panel
+            </div>
+            <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setActiveTab('products')}
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'products' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
@@ -348,7 +351,7 @@ export default function AdminDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab('orders')}
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'orders' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
@@ -356,7 +359,7 @@ export default function AdminDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab('users')}
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'users' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
@@ -364,30 +367,27 @@ export default function AdminDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activeTab === 'reviews' ? 'bg-red-600 shadow-lg' : 'bg-red-700 hover:bg-red-600'
                 }`}
               >
                 ⭐ Reviews ({reviews.filter(r => !r.isApproved).length})
               </button>
             </div>
-            <div className="text-sm sm:text-base text-red-100">
-              Admin Panel
-            </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="container mx-auto p-3">
         {activeTab === 'products' && (
-          <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
-                Add New Product
+          <div className="space-y-4">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <h2 className="text-lg font-bold mb-4">
+                ➕ Add New Product
               </h2>
-              <form onSubmit={handleAddProduct} className="space-y-4">
+              <form onSubmit={handleAddProduct} className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Name
                   </label>
                   <input
@@ -396,12 +396,12 @@ export default function AdminDashboard() {
                     onChange={(e) =>
                       setNewProduct({ ...newProduct, name: e.target.value })
                     }
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-base"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Description
                   </label>
                   <textarea
@@ -412,15 +412,15 @@ export default function AdminDashboard() {
                         description: e.target.value,
                       })
                     }
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-base"
-                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    rows="2"
                     required
                   />
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Price
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Price (₹)
                     </label>
                     <input
                       type="number"
@@ -429,12 +429,12 @@ export default function AdminDashboard() {
                       onChange={(e) =>
                         setNewProduct({ ...newProduct, price: e.target.value })
                       }
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-base"
+                      className="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
                       Stock
                     </label>
                     <input
@@ -443,68 +443,68 @@ export default function AdminDashboard() {
                       onChange={(e) =>
                         setNewProduct({ ...newProduct, stock: e.target.value })
                       }
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-base"
+                      className="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"
                       required
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Category
-                    </label>
-                    <select
-                      value={newProduct.category}
-                      onChange={(e) =>
-                        setNewProduct({
-                          ...newProduct,
-                          category: e.target.value,
-                        })
-                      }
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-base"
-                    >
-                      <option value="coffee">Coffee</option>
-                      <option value="tea">Tea</option>
-                      <option value="pastry">Pastry</option>
-                      <option value="sandwich">Sandwich</option>
-                    </select>
-                  </div>
                 </div>
-                <div className="flex space-x-4 mb-4">
-                  <label className="flex items-center">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={newProduct.category}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        category: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  >
+                    <option value="coffee">☕ Coffee</option>
+                    <option value="tea">🍵 Tea</option>
+                    <option value="pastry">🥐 Pastry</option>
+                    <option value="sandwich">🥪 Sandwich</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex items-center bg-gray-50 p-2 rounded">
                     <input
                       type="checkbox"
                       checked={newProduct.isTrending}
                       onChange={(e) => setNewProduct({ ...newProduct, isTrending: e.target.checked })}
                       className="mr-2"
                     />
-                    <span className="text-sm font-medium text-gray-700">Trending</span>
+                    <span className="text-xs font-medium text-gray-700">🔥 Trending</span>
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center bg-gray-50 p-2 rounded">
                     <input
                       type="checkbox"
                       checked={newProduct.isFeatured}
                       onChange={(e) => setNewProduct({ ...newProduct, isFeatured: e.target.checked })}
                       className="mr-2"
                     />
-                    <span className="text-sm font-medium text-gray-700">Featured</span>
+                    <span className="text-xs font-medium text-gray-700">⭐ Featured</span>
                   </label>
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 text-base font-medium"
+                  className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 text-sm font-medium"
                 >
-                  Add Product
+                  ➕ Add Product
                 </button>
               </form>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
-                Products ({products.length})
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <h2 className="text-lg font-bold mb-4">
+                📦 Products ({products.length})
               </h2>
               <div className="mb-4 space-y-2">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="🔍 Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
@@ -515,13 +515,13 @@ export default function AdminDashboard() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 >
                   <option value="">All Categories</option>
-                  <option value="coffee">Coffee</option>
-                  <option value="tea">Tea</option>
-                  <option value="pastry">Pastry</option>
-                  <option value="sandwich">Sandwich</option>
+                  <option value="coffee">☕ Coffee</option>
+                  <option value="tea">🍵 Tea</option>
+                  <option value="pastry">🥐 Pastry</option>
+                  <option value="sandwich">🥪 Sandwich</option>
                 </select>
               </div>
-              <div className="space-y-3 max-h-80 sm:max-h-96 overflow-y-auto">
+              <div className="space-y-3 max-h-96 overflow-y-auto">
                 {products.map((product) => (
                   <div
                     key={product._id}

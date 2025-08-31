@@ -217,46 +217,46 @@ export default function CustomerDashboard() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      {/* Customer Tabs */}
-      <div className="bg-amber-800 text-white p-4">
+      {/* Mobile-First Customer Tabs */}
+      <div className="bg-amber-800 text-white p-3 sticky top-0 z-40">
         <div className="container mx-auto">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-            <div className="flex space-x-2 mb-2 sm:mb-0">
+          <div className="flex flex-col space-y-3">
+            <div className="text-center text-amber-100 font-medium text-sm">
+              Customer Dashboard
+            </div>
+            <div className="grid grid-cols-3 gap-2">
               <button 
                 onClick={() => setActiveTab('menu')} 
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'menu' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${activeTab === 'menu' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
               >
                 🍽️ Menu
               </button>
               <button 
                 onClick={() => setActiveTab('orders')} 
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'orders' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${activeTab === 'orders' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
               >
-                📋 My Orders
+                📋 Orders
               </button>
               <button 
                 onClick={() => setActiveTab('review')} 
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 ${activeTab === 'review' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
+                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${activeTab === 'review' ? 'bg-amber-600 shadow-lg' : 'bg-amber-700 hover:bg-amber-600'}`}
               >
-                ⭐ Review Shop
+                ⭐ Review
               </button>
-            </div>
-            <div className="text-sm sm:text-base text-amber-100">
-              Customer Dashboard
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="container mx-auto p-3">
         {activeTab === 'menu' && (
-          <div className="space-y-6 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
-            <div className="lg:col-span-2">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Menu</h2>
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-lg font-bold mb-4">🍽️ Menu</h2>
               <div className="mb-4 space-y-2">
                 <input
                   type="text"
-                  placeholder="Search menu items..."
+                  placeholder="🔍 Search menu items..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
@@ -267,13 +267,13 @@ export default function CustomerDashboard() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 >
                   <option value="">All Categories</option>
-                  <option value="coffee">Coffee</option>
-                  <option value="tea">Tea</option>
-                  <option value="pastry">Pastry</option>
-                  <option value="sandwich">Sandwich</option>
+                  <option value="coffee">☕ Coffee</option>
+                  <option value="tea">🍵 Tea</option>
+                  <option value="pastry">🥐 Pastry</option>
+                  <option value="sandwich">🥪 Sandwich</option>
                 </select>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 gap-4">
                 {products.map((product) => (
                   <div key={product._id} className={`bg-white rounded-lg shadow-md p-4 sm:p-6 ${
                     (product.stock || 0) === 0 ? 'opacity-50' : ''
@@ -308,8 +308,8 @@ export default function CustomerDashboard() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 h-fit">
-              <h3 className="text-lg sm:text-xl font-bold mb-4">Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
+            <div className="bg-white rounded-lg shadow-md p-4 sticky top-20 z-30">
+              <h3 className="text-lg font-bold mb-4">🛒 Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
               {cart.length === 0 ? (
                 <p className="text-gray-500">Your cart is empty</p>
               ) : (
@@ -546,9 +546,17 @@ export default function CustomerDashboard() {
         )}
 
         {showPayment && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-4 sm:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Payment Options</h3>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+            <div className="bg-white rounded-t-2xl sm:rounded-lg p-4 w-full sm:max-w-md sm:w-full max-h-[95vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold">💳 Payment Options</h3>
+                <button 
+                  onClick={() => setShowPayment(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
               <div className="space-y-4">
                 <div className="bg-gray-50 p-3 sm:p-4 rounded">
                   <h4 className="font-semibold mb-2 text-sm sm:text-base">Order Summary</h4>
@@ -604,22 +612,22 @@ export default function CustomerDashboard() {
                     <div className="text-center">
                       <h5 className="font-semibold mb-3">Scan QR Code to Pay</h5>
                       
-                      {/* Large QR Code Image */}
-                      <div className="bg-white p-6 rounded-xl shadow-lg inline-block mb-6">
+                      {/* Mobile-Optimized QR Code */}
+                      <div className="bg-white p-4 rounded-xl shadow-lg inline-block mb-4">
                         <img 
                           src="/qr-code.png" 
                           alt="UPI QR Code" 
-                          className="w-64 h-64 sm:w-80 sm:h-80 object-contain mx-auto"
+                          className="w-48 h-48 object-contain mx-auto"
                           onError={(e) => {
                             e.target.style.display = 'none'
                             e.target.nextSibling.style.display = 'flex'
                           }}
                         />
-                        <div className="w-64 h-64 sm:w-80 sm:h-80 bg-gray-200 flex items-center justify-center text-gray-500 mx-auto" style={{display: 'none'}}>
+                        <div className="w-48 h-48 bg-gray-200 flex items-center justify-center text-gray-500 mx-auto" style={{display: 'none'}}>
                           <div className="text-center">
-                            <div className="text-6xl mb-4">📱</div>
-                            <div className="text-lg font-medium">Add your QR code</div>
-                            <div className="text-sm mt-2 text-gray-400">Save as qr-code.png in public folder</div>
+                            <div className="text-4xl mb-2">📱</div>
+                            <div className="text-sm font-medium">Add your QR code</div>
+                            <div className="text-xs mt-1 text-gray-400">Save as qr-code.png in public folder</div>
                           </div>
                         </div>
                       </div>

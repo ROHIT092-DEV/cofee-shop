@@ -223,19 +223,19 @@ export default function Home() {
               Every cup tells a story of passion and perfection.
             </p>
             
-            {/* Real-time Stats */}
-            <div className="flex justify-center items-center space-x-8 mb-12 animate-fadeInUp" style={{animationDelay: '1.1s'}}>
-              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="text-3xl font-bold text-amber-800">{stats.users.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">Happy Customers</div>
+            {/* Mobile-Optimized Real-time Stats */}
+            <div className="grid grid-cols-3 gap-2 mb-8 animate-fadeInUp" style={{animationDelay: '1.1s'}}>
+              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-3">
+                <div className="text-xl font-bold text-amber-800">{stats.users.toLocaleString()}</div>
+                <div className="text-xs text-gray-600">Customers</div>
               </div>
-              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="text-3xl font-bold text-amber-800">{stats.orders.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">Orders Served</div>
+              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-3">
+                <div className="text-xl font-bold text-amber-800">{stats.orders.toLocaleString()}</div>
+                <div className="text-xs text-gray-600">Orders</div>
               </div>
-              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="text-3xl font-bold text-amber-800">{stats.products}</div>
-                <div className="text-sm text-gray-600">Menu Items</div>
+              <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl p-3">
+                <div className="text-xl font-bold text-amber-800">{stats.products}</div>
+                <div className="text-xs text-gray-600">Items</div>
               </div>
             </div>
             
@@ -320,9 +320,9 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Advanced Filters */}
-          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 lg:p-8 mb-8 shadow-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          {/* Mobile-First Filters */}
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-4 mb-6 shadow-lg">
+            <div className="grid grid-cols-1 gap-3 mb-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Search Products</label>
                 <input
@@ -407,7 +407,7 @@ export default function Home() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 gap-4">
               {products.map((product) => (
                 <div key={product._id} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
                   <div className="p-6">
