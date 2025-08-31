@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
-import dbConnect from '@/lib/mongodb'
+import connectDB from '@/lib/mongodb'
 import Product from '@/models/Product'
 
 export async function GET(request) {
   try {
-    await dbConnect()
+    await connectDB()
     const { searchParams } = new URL(request.url)
     const search = searchParams.get('search') || ''
     const category = searchParams.get('category') || ''
@@ -38,7 +38,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    await dbConnect()
+    await connectDB()
     const { name, description, price, category, stock = 100, isTrending = false, isFeatured = false } = await request.json()
     const product = await Product.create({ 
       name, 

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
-import dbConnect from '@/lib/mongodb'
+import connectDB from '@/lib/mongodb'
 import Product from '@/models/Product'
 
 export async function GET() {
   try {
-    await dbConnect()
+    await connectDB()
     const trendingProducts = await Product.find({ 
       $or: [
         { isTrending: true },
